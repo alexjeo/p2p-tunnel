@@ -72,7 +72,7 @@ namespace client.service
 
             config.Server.Ip = ServerIp;
             config.Server.Port = ServerPort;
-            config.Server.TcpPort = ClientTcpPort;
+            config.Server.TcpPort = ServerTcpPort;
 
             System.IO.File.WriteAllText("appsettings.json", Helper.JsonSerializer(config), System.Text.Encoding.UTF8);
         }

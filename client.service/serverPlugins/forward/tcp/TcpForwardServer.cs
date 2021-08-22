@@ -1,6 +1,6 @@
 ﻿using client.service.serverPlugins.clients;
-using client.ui.extends;
 using common;
+using common.extends;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
