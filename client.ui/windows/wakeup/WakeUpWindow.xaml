@@ -1,0 +1,31 @@
+﻿<Window x:Class="client.ui.windows.wakeup.WakeUpWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:client.ui.windows.wakeup" xmlns:hc="https://handyorg.github.io/handycontrol"
+        mc:Ignorable="d"
+        Title="发送UDP幻数据包唤醒计算机" Height="300" Width="350">
+    <StackPanel Margin="20">
+        <ComboBox ItemsSource="{Binding Ips}" Name="IpsComboBox"
+                              hc:InfoElement.TitleWidth="60" hc:InfoElement.TitlePlacement="Left" hc:InfoElement.Title="选择网段" 
+                              Style="{StaticResource ComboBoxExtend}"/>
+        <hc:TextBox Margin="0 10 0 0" Text="{Binding Ip}" 
+                                hc:InfoElement.Placeholder="IP地址" hc:InfoElement.Title="IP地址" 
+                                hc:TitleElement.TitleWidth="60" hc:InfoElement.TitlePlacement="Left"></hc:TextBox>
+        <hc:TextBox Margin="0 10 0 0" Text="{Binding Mac}" 
+                                hc:InfoElement.Placeholder="MAC地址" hc:InfoElement.Title="MAC地址" 
+                                hc:TitleElement.TitleWidth="60" hc:InfoElement.TitlePlacement="Left"></hc:TextBox>
+
+        <WrapPanel Margin="0 10 0 0" HorizontalAlignment="Center">
+            <Button Click="WakeUpAllClick">广播唤醒</Button>
+            <Button Margin="10 0 0 0" Click="WakeUpClick">指定唤醒</Button>
+        </WrapPanel>
+
+        <StackPanel Margin="0 10 0 0">
+            <TextBlock>1。目标计算机主板开启唤醒，网卡开启唤醒，允许远程唤醒</TextBlock>
+            <TextBlock>2。网卡能保持充电，外接网卡一般不行</TextBlock>
+            <TextBlock>3。没有异常关机</TextBlock>
+        </StackPanel>
+    </StackPanel>
+</Window>

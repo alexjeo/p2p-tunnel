@@ -1,0 +1,40 @@
+<!--
+ * @Author: snltty
+ * @Date: 2021-08-22 14:09:03
+ * @LastEditors: snltty
+ * @LastEditTime: 2021-08-22 14:14:39
+ * @version: v1.0.0
+ * @Descripttion: 功能说明
+ * @FilePath: \client.web.vue3d:\Desktop\p2p-tunnel\README.md
+-->
+# p2p-tunnel
+
+1. .NET5 Socket编程实现内网穿透
+2. UDP,TCP打洞实现点对点直连
+3. 访问内网web，内网桌面，及其它TCP上层协议服务
+4. 服务端只承受 客户端注册，客户端信息的交换。不承受数据转发，几乎无压力
+
+### 以下项目可用，其余为尝试阶段
+1. server.service 服务端，
+2. client.service 客户端
+3. client.web.vue3 客户端管理界面
+
+##### 配置及更详细说明在 wiki 
+
+### 截图
+#### 1. 注册
+![注册](https://gitee.com/snltty/p2p-tunnel/raw/master/screenshot/reg.jpg)
+
+
+#### 2. 客户端列表
+![客户端列表](https://gitee.com/snltty/p2p-tunnel/raw/master/screenshot/clients.jpg)
+
+
+#### 3. 转发配置
+![转发配置](https://gitee.com/snltty/p2p-tunnel/raw/master/screenshot/tcpforward.jpg)
+
+#### 4. 访问对方网页
+![访问网页](https://gitee.com/snltty/p2p-tunnel/raw/master/screenshot/bweb.jpg)
+
+#### 5. 访问对方桌面
+![访问网页](https://gitee.com/snltty/p2p-tunnel/raw/master/screenshot/bdesktop.jpg)
