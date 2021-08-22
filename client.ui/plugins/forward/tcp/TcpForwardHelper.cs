@@ -1,5 +1,4 @@
-﻿using client.ui.extends;
-using client.ui.plugins.clients;
+﻿using client.ui.plugins.clients;
 using client.ui.viewModel;
 using common;
 using common.extends;

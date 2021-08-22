@@ -1,11 +1,10 @@
-﻿using client.ui.extends;
-using client.ui.plugins.clients;
+﻿using client.ui.plugins.clients;
 using client.ui.viewModel;
 using common;
+using common.extends;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;

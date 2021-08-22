@@ -1,11 +1,11 @@
-﻿using client.ui.extends;
-using client.ui.plugins.chat;
+﻿using client.ui.plugins.chat;
 using client.ui.plugins.connectClient;
 using client.ui.plugins.heart;
 using client.ui.plugins.rdpDesktop;
 using client.ui.plugins.register;
 using client.ui.viewModel;
 using common;
+using common.extends;
 using server.model;
 using System;
 using System.Collections.Concurrent;
