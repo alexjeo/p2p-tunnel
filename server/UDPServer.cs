@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -44,10 +45,13 @@ namespace server
             IpepServer = new IPEndPoint(IPAddress.Any, port);
             UdpcRecv = new UdpClient(IpepServer);
 
-            const uint IOC_IN = 0x80000000;
-            int IOC_VENDOR = 0x18000000;
-            int SIO_UDP_CONNRESET = (int)(IOC_IN | IOC_VENDOR | 12);
-            UdpcRecv.Client.IOControl(SIO_UDP_CONNRESET, new byte[] { Convert.ToByte(false) }, null);
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                const uint IOC_IN = 0x80000000;
+                int IOC_VENDOR = 0x18000000;
+                int SIO_UDP_CONNRESET = (int)(IOC_IN | IOC_VENDOR | 12);
+                UdpcRecv.Client.IOControl(SIO_UDP_CONNRESET, new byte[] { Convert.ToByte(false) }, null);
+            }
 
             IsStart = true;
             _ = Task.Factory.StartNew(() =>
