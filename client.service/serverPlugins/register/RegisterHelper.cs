@@ -117,6 +117,10 @@ namespace client.service.serverPlugins.register
                         serverSocket.Connect(new IPEndPoint(IPAddress.Parse(AppShareData.Instance.ServerIp), AppShareData.Instance.ServerTcpPort));
                         TCPServer.Instance.BindReceive(serverSocket);
 
+
+                        string mac = Helper.GetMacAddress(IPEndPoint.Parse(serverSocket.LocalEndPoint.ToString()).Address.ToString());
+                        Logger.Instance.Info(mac);
+
                         //UDP 开始监听
                         UDPServer.Instance.Start(AppShareData.Instance.ClientPort);
                         AppShareData.Instance.UdpServer = new IPEndPoint(IPAddress.Parse(AppShareData.Instance.ServerIp), AppShareData.Instance.ServerPort);
