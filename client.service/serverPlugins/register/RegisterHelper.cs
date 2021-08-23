@@ -118,8 +118,12 @@ namespace client.service.serverPlugins.register
                         TCPServer.Instance.BindReceive(serverSocket);
 
 
-                        string mac = Helper.GetMacAddress(IPEndPoint.Parse(serverSocket.LocalEndPoint.ToString()).Address.ToString());
-                        Logger.Instance.Info(mac);
+                        string mac = string.Empty;
+                        if (AppShareData.Instance.UseMac)
+                        {
+                            AppShareData.Instance.Mac = mac = Helper.GetMacAddress(IPEndPoint.Parse(serverSocket.LocalEndPoint.ToString()).Address.ToString());
+                        }
+
 
                         //UDP 开始监听
                         UDPServer.Instance.Start(AppShareData.Instance.ClientPort);
@@ -128,6 +132,7 @@ namespace client.service.serverPlugins.register
                         {
                             ClientName = AppShareData.Instance.ClientName,
                             GroupId = AppShareData.Instance.GroupId,
+                            Mac = mac,
                             LocalIps = IPEndPoint.Parse(serverSocket.LocalEndPoint.ToString()).Address.ToString(),
                             Timeout = 5 * 1000,
                             Callback = (result) =>
@@ -137,6 +142,7 @@ namespace client.service.serverPlugins.register
                                 AppShareData.Instance.Connected = true;
                                 AppShareData.Instance.TcpConnected = true;
                                 AppShareData.Instance.GroupId = result.GroupId;
+                                AppShareData.Instance.Ip = result.Ip;
                                 OnRegisterChange?.Invoke(this, true);
 
                                 callback?.Invoke(string.Empty);

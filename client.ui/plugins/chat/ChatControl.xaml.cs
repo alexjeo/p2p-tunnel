@@ -133,26 +133,30 @@ namespace client.ui.plugins.chat
             }
             else
             {
+                //保存路径
                 string path = Path.Combine(filePath, e.FromId.ToString());
                 if (!Directory.Exists(path))
                 {
                     _ = Directory.CreateDirectory(path);
                 }
-                string fullPath = Path.Combine(path, $"{e.Name}");
-
+                string fullPath = Path.Combine(path, e.Name);
+                //因为分包，每次消息只有文件的一部分，需要缓存
                 _ = files.TryGetValue(e.Md5, out FileStream fs);
                 if (fs == null)
                 {
+                    //删除旧文件
                     if (File.Exists(fullPath))
                     {
                         File.Delete(fullPath);
                     }
+                    //界面显示
                     _ = EnqueueMsg(new MessageModel
                     {
                         Type = MessageType.RECEIVE_FILE,
                         Content = $"{e.Name} ({Helper.FileSizeFormat(e.Size)})",
                         FilePath = fullPath
                     }, e.FromId);
+                    //创建或者追加
                     fs = new FileStream(fullPath, FileMode.Create & FileMode.Append, FileAccess.Write);
                     _ = files.TryAdd(e.Md5, fs);
                 }

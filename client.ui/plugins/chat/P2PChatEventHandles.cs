@@ -96,9 +96,11 @@ namespace client.ui.plugins.chat
                 {
                     try
                     {
-                        int packSize = 1024; //每个包大小 
-
+                        //每个包大小 
+                        int packSize = 1024;
+                        //包数量
                         int packCount = (int)(arg.Data.Size / packSize);
+                        //最后一包长度
                         long lastPackSize = arg.Data.Size - packCount * packSize;
                         int index = 0;
                         using FileStream fs = file.OpenRead();
@@ -106,10 +108,10 @@ namespace client.ui.plugins.chat
                         {
                             byte[] data = new byte[packSize];
                             fs.Read(data, 0, packSize);
-
                             arg.Data.Data = data;
                            _SendTcpChatFileMessage(arg);
                         }
+                        //最后一包
                         if (lastPackSize > 0)
                         {
                             byte[] data = new byte[lastPackSize];

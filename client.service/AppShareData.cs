@@ -33,6 +33,8 @@ namespace client.service
         public string GroupId { get; set; } = string.Empty;
         //自动注册
         public bool AutoReg { get; set; } = false;
+        public bool UseMac { get; set; } = false;
+        public string Mac { get; set; } = string.Empty;
 
 
         //UDP是否已连接
@@ -69,6 +71,7 @@ namespace client.service
             config.Client.GroupId = GroupId;
             config.Client.Name = ClientName;
             config.Client.AutoReg = AutoReg;
+            config.Client.UseMac = UseMac;
 
             config.Server.Ip = ServerIp;
             config.Server.Port = ServerPort;

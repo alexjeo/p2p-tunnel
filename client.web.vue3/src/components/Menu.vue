@@ -2,7 +2,7 @@
  * @Author: snltty
  * @Date: 2021-08-19 22:05:47
  * @LastEditors: snltty
- * @LastEditTime: 2021-08-21 23:55:47
+ * @LastEditTime: 2021-08-23 16:40:17
  * @version: v1.0.0
  * @Descripttion: 功能说明
  * @FilePath: \client.web.vue3\src\components\Menu.vue
@@ -17,6 +17,7 @@
             <router-link :to="{name:'Register'}">注册服务 <i class="el-icon-circle-check" :class="{active:TcpConnected}"></i></router-link>
             <router-link :to="{name:'TcpForward'}">TCP转发 <i class="el-icon-circle-check" :class="{active:tcpForwardConnected}"></i></router-link>
             <router-link :to="{name:'UPNP'}">UPNP映射</router-link>
+            <router-link :to="{name:'WakeUp'}">幻数据包</router-link>
         </div>
         <div class="meta">
             <a href="javascript:;">{{connectStr}}<i class="el-icon-refresh"></i></a>

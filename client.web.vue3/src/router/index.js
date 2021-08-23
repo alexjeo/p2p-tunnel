@@ -2,7 +2,7 @@
  * @Author: snltty
  * @Date: 2021-08-19 21:50:16
  * @LastEditors: snltty
- * @LastEditTime: 2021-08-22 12:22:26
+ * @LastEditTime: 2021-08-23 16:39:43
  * @version: v1.0.0
  * @Descripttion: 功能说明
  * @FilePath: \client.web.vue3\src\router\index.js
@@ -29,6 +29,11 @@ const routes = [
         path: '/tcp-forward.html',
         name: 'TcpForward',
         component: () => import('../views/TcpForward.vue')
+    },
+    {
+        path: '/wakeup.html',
+        name: 'WakeUp',
+        component: () => import('../views/WakeUp.vue')
     }
 ]
 

@@ -16,13 +16,20 @@ namespace client.service.clientService.plugins
         {
             WakeUpModel model = Helper.DeJsonSerializer<WakeUpModel>(arg.Content);
 
-            if (AppShareData.Instance.Clients.TryGetValue(model.ID, out ClientInfo client))
+            if (model.ID > 0)
             {
-                if (client != null)
+                if (AppShareData.Instance.Clients.TryGetValue(model.ID, out ClientInfo client))
                 {
-                    Send(client.Mac, client.Address.Address.ToString(), client.Address.Port);
+                    if (client != null)
+                    {
+                        model.Mac = client.Mac;
+                        model.Ip = client.Address.Address.ToString();
+                        model.Port = client.Address.Port;
+
+                    }
                 }
             }
+            Send(model.Mac, model.Ip, model.Port);
         }
 
 
@@ -52,6 +59,9 @@ namespace client.service.clientService.plugins
     public class WakeUpModel
     {
         public long ID { get; set; } = 0;
+        public string Ip { get; set; } = string.Empty;
+        public string Mac { get; set; } = string.Empty;
+        public int Port { get; set; } = 0;
     }
 
 

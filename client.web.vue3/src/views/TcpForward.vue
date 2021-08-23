@@ -2,7 +2,7 @@
  * @Author: snltty
  * @Date: 2021-08-20 00:47:21
  * @LastEditors: snltty
- * @LastEditTime: 2021-08-21 16:18:27
+ * @LastEditTime: 2021-08-23 16:58:29
  * @version: v1.0.0
  * @Descripttion: 功能说明
  * @FilePath: \client.web.vue3\src\views\TcpForward.vue
@@ -45,12 +45,12 @@
                 <el-form-item label="" label-width="0">
                     <el-row>
                         <el-col :span="12">
-                            <el-form-item label="源IP">
+                            <el-form-item label="源IP" prop="SourceIp">
                                 <el-input v-model="form.SourceIp"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="12">
-                            <el-form-item label="源端口">
+                            <el-form-item label="源端口" prop="SourcePort">
                                 <el-input v-model="form.SourcePort"></el-input>
                             </el-form-item>
                         </el-col>
@@ -59,7 +59,7 @@
                 <el-form-item label="" label-width="0">
                     <el-row>
                         <el-col :span="12">
-                            <el-form-item label="目标">
+                            <el-form-item label="目标" prop="TargetName">
                                 <el-select v-model="form.TargetName" placeholder="选择类型">
                                     <el-option v-for="(item,index) in clients" :key="index" :label="item.Name" :value="item.Name">
                                     </el-option>
@@ -67,7 +67,7 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="12">
-                            <el-form-item label="连接类型">
+                            <el-form-item label="连接类型" prop="AliveType">
                                 <el-select v-model="form.AliveType" placeholder="选择类型">
                                     <el-option v-for="(item,index) in aliveTypes" :key="index" :label="item" :value="index">
                                     </el-option>
@@ -79,12 +79,12 @@
                 <el-form-item label="" label-width="0">
                     <el-row>
                         <el-col :span="12">
-                            <el-form-item label="目标IP">
+                            <el-form-item label="目标IP" prop="TargetIp">
                                 <el-input v-model="form.TargetIp"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="12">
-                            <el-form-item label="目标端口">
+                            <el-form-item label="目标端口" prop="TargetPort">
                                 <el-input v-model="form.TargetPort"></el-input>
                             </el-form-item>
                         </el-col>

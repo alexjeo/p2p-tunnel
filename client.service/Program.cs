@@ -64,6 +64,14 @@ namespace client.service
                 Console.WriteLine($"[{model.Type}][{model.Time:yyyy-MM-dd HH:mm:ss}]:{model.Content}");
             };
 
+
+            Console.WriteLine("=======================================");
+            Console.WriteLine("没什么报红的报黄的，就说明运行成功了");
+            Console.WriteLine("=======================================");
+            Console.WriteLine($"前端管理地址:http://{config.Web.Ip}:{config.Web.Port}");
+            Console.WriteLine($"管理通信地址:ws://{config.Websocket.Ip}:{config.Websocket.Port}");
+
+
             Console.ReadLine();
         }
     }

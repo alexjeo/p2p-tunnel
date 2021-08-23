@@ -15,6 +15,7 @@ namespace client.service.clientService.plugins
             AppShareData.Instance.ClientName = model.ClientName;
             AppShareData.Instance.GroupId = model.GroupId;
             AppShareData.Instance.AutoReg = model.AutoReg;
+            AppShareData.Instance.UseMac = model.UseMac;
 
             AppShareData.Instance.ServerIp = model.ServerIp;
             AppShareData.Instance.ServerPort = model.ServerPort;
@@ -39,6 +40,10 @@ namespace client.service.clientService.plugins
         /// 自动注册
         /// </summary>
         public bool AutoReg { get; set; } = false;
+        /// <summary>
+        /// 是否上报MAC地址
+        /// </summary>
+        public bool UseMac { get; set; } = false;
 
         /// <summary>
         /// NAT服务地址

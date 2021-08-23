@@ -36,6 +36,8 @@ namespace client.service.clientService.plugins
                 AppShareData.Instance.ClientPort,
                 AppShareData.Instance.ClientTcpPort,
                 AppShareData.Instance.AutoReg,
+                AppShareData.Instance.UseMac,
+                AppShareData.Instance.Mac,
                 AppShareData.Instance.Connected,
                 AppShareData.Instance.ConnectId,
                 AppShareData.Instance.GroupId,

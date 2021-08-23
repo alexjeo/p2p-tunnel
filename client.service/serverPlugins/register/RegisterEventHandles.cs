@@ -95,7 +95,8 @@ namespace client.service.serverPlugins.register
                 {
                     Name = param.ClientName,
                     GroupId = param.GroupId,
-                    LocalIps = param.LocalIps
+                    LocalIps = param.LocalIps,
+                    Mac = param.Mac
                 }
             });
 
@@ -125,7 +126,7 @@ namespace client.service.serverPlugins.register
         /// 发送Tcp注册消息
         /// </summary>
         /// <param name="arg"></param>
-        public void SendTcpRegisterMessage(long id, string clientName, string groupId = "")
+        public void SendTcpRegisterMessage(long id, string clientName, string groupId = "", string mac = "")
         {
             EventHandlers.SendTcpMessage(new SendTcpMessageEventArg
             {
@@ -134,7 +135,8 @@ namespace client.service.serverPlugins.register
                 {
                     Id = id,
                     Name = clientName,
-                    GroupId = groupId
+                    GroupId = groupId,
+                    Mac = mac
                 }
             });
             OnSendTcpRegisterMessageHandler?.Invoke(this, clientName);
@@ -180,7 +182,7 @@ namespace client.service.serverPlugins.register
             {
                 if (arg.Data.Code == 0)
                 {
-                    SendTcpRegisterMessage(arg.Data.Id, requestCache.ClientName, arg.Data.GroupId);
+                    SendTcpRegisterMessage(arg.Data.Id, requestCache.ClientName, arg.Data.GroupId, arg.Data.Mac);
                     SendRegisterStateChange(new RegisterEventArg
                     {
                         ServerAddress = arg.Packet.SourcePoint,
@@ -262,6 +264,7 @@ namespace client.service.serverPlugins.register
         public string GroupId { get; set; } = string.Empty;
         public string ClientName { get; set; } = string.Empty;
         public string LocalIps { get; set; } = string.Empty;
+        public string Mac { get; set; } = string.Empty;
         public int Timeout { get; set; } = 15 * 1000;
         public Action<MessageRegisterResultModel> Callback { get; set; } = null;
         public Action<RegisterMessageFailModel> FailCallback { get; set; } = null;

@@ -29,6 +29,8 @@ namespace client.service.config
         public string GroupId { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public bool AutoReg { get; set; } = false;
+        public bool UseMac { get; set; } = false;
+        
     }
 
     public class ServerConfig

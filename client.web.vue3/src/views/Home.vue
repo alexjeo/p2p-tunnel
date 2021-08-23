@@ -2,7 +2,7 @@
  * @Author: snltty
  * @Date: 2021-08-19 21:50:16
  * @LastEditors: snltty
- * @LastEditTime: 2021-08-23 15:03:29
+ * @LastEditTime: 2021-08-23 17:03:37
  * @version: v1.0.0
  * @Descripttion: 功能说明
  * @FilePath: \client.web.vue3\src\views\Home.vue
@@ -11,6 +11,8 @@
     <div class="home">
         <el-table :data="clients" border size="mini">
             <el-table-column prop="Name" label="客户端"></el-table-column>
+            <el-table-column prop="Ip" label="Ip"></el-table-column>
+            <el-table-column prop="Mac" label="Mac"></el-table-column>
             <el-table-column prop="UDP" label="UDP" width="80">
                 <template #default="scope">
                     <el-switch @click.stop v-model="scope.row.Connected"></el-switch>

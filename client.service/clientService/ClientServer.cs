@@ -44,6 +44,28 @@ namespace client.service.clientService
         public void Start(string ip, int port)
         {
             WebSocketServer server = new($"ws://{ip}:{port}");
+            server.RestartAfterListenError = true;
+            FleckLog.LogAction = (level, message, ex) =>
+            {
+                switch (level)
+                {
+                    case LogLevel.Debug:
+                        Logger.Instance.Info(message);
+                        break;
+                    case LogLevel.Info:
+                        Logger.Instance.Info(message);
+                        break;
+                    case LogLevel.Warn:
+                        Logger.Instance.Info(message);
+                        break;
+                    case LogLevel.Error:
+                        Logger.Instance.Error(message);
+                        break;
+                    default:
+                        break;
+                }
+            };
+
             server.Start(socket =>
             {
                 socket.OnClose = () =>

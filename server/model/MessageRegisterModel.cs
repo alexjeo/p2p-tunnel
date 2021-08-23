@@ -30,6 +30,9 @@ namespace server.model
 
         [ProtoMember(5)]
         public string LocalIps { get; set; } = string.Empty;
+
+        [ProtoMember(6)]
+        public string Mac { get; set; } = string.Empty;
     }
 
     [ProtoContract]
@@ -60,5 +63,8 @@ namespace server.model
 
         [ProtoMember(8)]
         public string GroupId { get; set; } = string.Empty;
+
+        [ProtoMember(9)]
+        public string Mac { get; set; } = string.Empty;
     }
 }

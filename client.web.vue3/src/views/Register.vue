@@ -2,7 +2,7 @@
  * @Author: snltty
  * @Date: 2021-08-19 22:30:19
  * @LastEditors: snltty
- * @LastEditTime: 2021-08-21 17:45:37
+ * @LastEditTime: 2021-08-23 16:27:09
  * @version: v1.0.0
  * @Descripttion: 功能说明
  * @FilePath: \client.web.vue3\src\views\Register.vue
@@ -43,7 +43,6 @@
                     </el-col>
                 </el-row>
             </el-form-item>
-
             <el-form-item label="客户信息">
                 <el-row>
                     <el-col :span="8">
@@ -73,6 +72,20 @@
                     <el-col :span="8">
                         <el-form-item label="外网距离">
                             <el-input readonly v-model="RouteLevel"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </el-form-item>
+            <el-form-item label="Mac地址">
+                <el-row>
+                    <el-col :span="8">
+                        <el-form-item label="地址" label-width="50">
+                            <el-input readonly v-model="Mac"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="上报mac">
+                            <el-switch v-model="UseMac" />
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -133,6 +146,8 @@ export default {
             registerState.ServerTcpPort = json.ServerTcpPort;
             registerState.GroupId = json.GroupId;
             registerState.AutoReg = json.AutoReg;
+            registerState.UseMac = json.UseMac;
+
         }).catch((msg) => {
             ElMessage.error(msg);
         });
@@ -146,6 +161,7 @@ export default {
                 ServerTcpPort: registerState.ServerTcpPort,
                 GroupId: registerState.GroupId,
                 AutoReg: registerState.AutoReg,
+                UseMac: registerState.UseMac,
             }).then(() => {
                 sendRegisterMsg().then((res) => {
                 }).catch((msg) => {
