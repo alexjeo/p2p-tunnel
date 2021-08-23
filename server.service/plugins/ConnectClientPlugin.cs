@@ -25,6 +25,12 @@ namespace server.service.plugins
                 RegisterCacheModel target = ClientRegisterCache.Instance.Get(model.ToId);
                 if (target != null)
                 {
+                    //是否在同一个组
+                    if (source.GroupId != target.GroupId)
+                    {
+                        return;
+                    }
+
                     if (serverType == ServerType.UDP)
                     {
                         //向B发送链接请求，告诉A谁要连接你，你给它回个消息
@@ -61,6 +67,7 @@ namespace server.service.plugins
                             }
                         });
                     }
+
                 }
             }
 
@@ -81,8 +88,13 @@ namespace server.service.plugins
             {
                 //已注册
                 RegisterCacheModel target = ClientRegisterCache.Instance.Get(model.ToId);
+
                 if (target != null)
                 {
+                    if (source.GroupId != target.GroupId)
+                    {
+                        return;
+                    }
                     if (serverType == ServerType.UDP)
                     {
                         //向A发送信息，B已经准备好了，你去连接一下吧
@@ -142,6 +154,10 @@ namespace server.service.plugins
                 RegisterCacheModel target = ClientRegisterCache.Instance.Get(model.ToId);
                 if (target != null)
                 {
+                    if (source.GroupId != target.GroupId)
+                    {
+                        return;
+                    }
                     if (serverType == ServerType.UDP)
                     {
                         UDPServer.Instance.Send(new MessageRecvQueueModel<IMessageModelBase>
@@ -197,6 +213,10 @@ namespace server.service.plugins
                 RegisterCacheModel target = ClientRegisterCache.Instance.Get(model.ToId);
                 if (target != null)
                 {
+                    if (source.GroupId != target.GroupId)
+                    {
+                        return;
+                    }
                     if (serverType == ServerType.UDP)
                     {
                         UDPServer.Instance.Send(new MessageRecvQueueModel<IMessageModelBase>

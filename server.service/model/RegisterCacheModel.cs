@@ -19,6 +19,7 @@ namespace server.service.model
         public long LastTime { get; set; }
 
         public string LocalIps { get; set; } = string.Empty;
+        public string Mac { get; set; } = string.Empty;
 
     }
 }
