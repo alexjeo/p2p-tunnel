@@ -2,7 +2,7 @@
  * @Author: snltty
  * @Date: 2021-08-19 21:50:16
  * @LastEditors: snltty
- * @LastEditTime: 2021-08-22 13:38:41
+ * @LastEditTime: 2021-08-23 15:03:29
  * @version: v1.0.0
  * @Descripttion: 功能说明
  * @FilePath: \client.web.vue3\src\views\Home.vue
@@ -41,7 +41,7 @@ export default {
         const clientsState = injectClients();
 
         const handleConnect = (row) => {
-            sendClientConnect(row.ID);
+            sendClientConnect(row.Id);
         }
 
         return {
