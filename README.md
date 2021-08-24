@@ -30,6 +30,11 @@
 
 ##### 配置及更详细说明在 wiki 
 
+| A端 | B端 | 可用 |
+| :----:| :----: | :----: |
+| 三级 | 二级 | √ |
+
+
 ### 截图
 #### 1. 注册
 ![注册](https://gitee.com/snltty/p2p-tunnel/raw/master/screenshot/reg.jpg)
