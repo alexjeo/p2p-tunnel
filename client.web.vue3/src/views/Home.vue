@@ -2,7 +2,7 @@
  * @Author: snltty
  * @Date: 2021-08-19 21:50:16
  * @LastEditors: snltty
- * @LastEditTime: 2021-08-23 17:03:37
+ * @LastEditTime: 2021-08-24 15:49:52
  * @version: v1.0.0
  * @Descripttion: 功能说明
  * @FilePath: \client.web.vue3\src\views\Home.vue
@@ -23,9 +23,10 @@
                     <el-switch @click.stop v-model="scope.row.TcpConnected"></el-switch>
                 </template>
             </el-table-column>
-            <el-table-column prop="todo" label="操作" width="100" fixed="right" class="t-c">
+            <el-table-column prop="todo" label="操作" width="145" fixed="right" class="t-c">
                 <template #default="scope">
                     <el-button :disabled="scope.row.TcpConnected" :loading="scope.row.Connecting" size="mini" @click="handleConnect(scope.row)">连接</el-button>
+                    <el-button :loading="scope.row.Connecting" size="mini" @click="handleReset(scope.row)">重启</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -36,6 +37,7 @@
 import { toRefs } from '@vue/reactivity';
 import { injectClients } from '../states/clients'
 import { sendClientConnect } from '../apis/clients'
+import { sendReset } from '../apis/reset'
 export default {
     name: 'Home',
     components: {},
@@ -45,9 +47,12 @@ export default {
         const handleConnect = (row) => {
             sendClientConnect(row.Id);
         }
+        const handleReset = (row) => {
+            sendReset(row.Id);
+        }
 
         return {
-            ...toRefs(clientsState), handleConnect
+            ...toRefs(clientsState), handleConnect, handleReset
         }
 
     }

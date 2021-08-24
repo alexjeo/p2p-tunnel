@@ -71,9 +71,7 @@ namespace server.model
         //P2P  客户端之间的直接消息
         P2P,
 
-        /// <summary>
-        /// 聊天
-        /// </summary>
-        CLIENT_CHAT,
+        //重启
+        SERVER_RESET,
     }
 }
