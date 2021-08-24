@@ -13,14 +13,19 @@ namespace rdpViewer
             axRDPViewer.SmartSizing = true;
             try
             {
-                //string viewerConnString = axRDPViewer.StartReverseConnectListener(connectString, userName, password);
-                axRDPViewer.Connect(connectString, userName, password);
-                //callback(viewerConnString);
-                axRDPViewer.OnConnectionFailed += (sender, e) =>
+                if (callback != null)
                 {
-                    _ = MessageBox.Show("连接失败");
-                };
-                //axRDPViewer.Dispose();
+                    string viewerConnString = axRDPViewer.StartReverseConnectListener(connectString, userName, password);
+                    callback.Invoke(viewerConnString);
+                }
+                else
+                {
+                    axRDPViewer.Connect(connectString, userName, password);
+                    axRDPViewer.OnConnectionFailed += (sender, e) =>
+                    {
+                        _ = MessageBox.Show("连接失败");
+                    };
+                }
             }
             catch (Exception ex)
             {

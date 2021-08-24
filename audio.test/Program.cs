@@ -1,18 +1,9 @@
-﻿using Mono.Nat;
-using NAudio.CoreAudioApi;
+﻿using NAudio.CoreAudioApi;
 using NAudio.Wave;
 using NSpeex;
 using ozeki;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Net.Sockets;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace audio.test
 {
@@ -27,24 +18,24 @@ namespace audio.test
             sp.AGCMaxGain = 300;
             sp.AGCSpeed = 15;
 
-            var encoder = new SpeexEncoder(BandMode.Narrow);
-            var waveFormat = new WaveFormat(encoder.FrameSize * 50, 16, 1);
+            SpeexEncoder encoder = new SpeexEncoder(BandMode.Narrow);
+            WaveFormat waveFormat = new WaveFormat(encoder.FrameSize * 50, 16, 1);
 
-            var waveProvider = new JitterBufferWaveProvider();
-            var waveOut = new WasapiOut(AudioClientShareMode.Shared, 20);
+            JitterBufferWaveProvider waveProvider = new JitterBufferWaveProvider();
+            WasapiOut waveOut = new WasapiOut(AudioClientShareMode.Shared, 20);
             waveOut.Init(waveProvider);
             waveOut.Volume = 0.5f;
             waveOut.Play();
 
-            var waveIn = new WaveInEvent { WaveFormat = waveFormat, BufferMilliseconds = 40, NumberOfBuffers = 2 };
+            WaveInEvent waveIn = new WaveInEvent { WaveFormat = waveFormat, BufferMilliseconds = 40, NumberOfBuffers = 2 };
             waveIn.DataAvailable += (s, e) =>
             {
-                var buffer = sp.Filter(e.Buffer).ToShortArray();
-                var encodedData = new byte[e.BytesRecorded];
-                var encodedBytes = encoder.Encode(buffer, 0, buffer.Length, encodedData, 0, encodedData.Length);
+                short[] buffer = sp.Filter(e.Buffer).ToShortArray();
+                byte[] encodedData = new byte[e.BytesRecorded];
+                int encodedBytes = encoder.Encode(buffer, 0, buffer.Length, encodedData, 0, encodedData.Length);
                 if (encodedBytes != 0)
                 {
-                    var upstreamFrame = new byte[encodedBytes];
+                    byte[] upstreamFrame = new byte[encodedBytes];
                     Buffer.BlockCopy(encodedData, 0, upstreamFrame, 0, encodedBytes);
 
                     waveProvider.Write(upstreamFrame, 0, upstreamFrame.Length);

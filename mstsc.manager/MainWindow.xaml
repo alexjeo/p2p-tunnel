@@ -1,0 +1,19 @@
+﻿<Window x:Class="mstsc.manager.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:hc="https://handyorg.github.io/handycontrol" xmlns:manager="clr-namespace:mstsc.manager"
+        mc:Ignorable="d"
+        Title="远程桌面管理" Width="1366" Height="808" Closing="WindowClosing" Closed="WindowClosed">
+    <Grid >
+        <hc:TabControl Name="tab" IsAnimationEnabled="True" ShowCloseButton="True" hc:TabItem.Closing="TabItemClosing">
+            <hc:TabItem Header="主页" ShowCloseButton="False">
+                <hc:SimplePanel Background="#fff">
+                    <manager:HomeControl></manager:HomeControl>
+                </hc:SimplePanel>
+            </hc:TabItem>
+        </hc:TabControl>
+    </Grid>
+    <!--<WindowsFormsHost Name="wfh"></WindowsFormsHost>-->
+</Window>
