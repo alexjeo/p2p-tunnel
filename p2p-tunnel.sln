@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ozeki", "ozeki\ozeki.csproj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "server.service", "server.service\server.service.csproj", "{6D0942D3-8C06-4D07-A642-26A3FEA10D45}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rdpViewer", "rdpViewer\rdpViewer.csproj", "{9BF19792-3D5F-438A-89E2-62763587D07C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rdp.viewer", "rdpViewer\rdp.viewer.csproj", "{9BF19792-3D5F-438A-89E2-62763587D07C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "client.service", "client.service\client.service.csproj", "{077423D4-10DA-400E-AD01-F48883777205}"
 EndProject

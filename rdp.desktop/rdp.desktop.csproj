@@ -26,7 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\common\common.csproj" />
-    <ProjectReference Include="..\rdpViewer\rdpViewer.csproj" />
+    <ProjectReference Include="..\rdpViewer\rdp.viewer.csproj" />
   </ItemGroup>
 
   <ItemGroup>

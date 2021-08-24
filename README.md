@@ -25,7 +25,7 @@
 3. ozeki 降噪 回音消除
 4. mstsc.manager windows远程桌面管理
 5. rdp.desktop rdp 桌面共享 
-6. rdpViewer  rdp 桌面共享查看器
+6. rdp.viewer  rdp 桌面共享查看器
 
 
 ##### 配置及更详细说明在 wiki 
