@@ -2,7 +2,7 @@
  * @Author: snltty
  * @Date: 2021-08-19 22:30:19
  * @LastEditors: snltty
- * @LastEditTime: 2021-08-23 16:57:35
+ * @LastEditTime: 2021-08-25 09:33:57
  * @version: v1.0.0
  * @Descripttion: 功能说明
  * @FilePath: \client.web.vue3\src\views\WakeUp.vue
@@ -61,11 +61,11 @@ export default {
                     ID: 0,
                     Ip: state.form.Ip,
                     Mac: state.form.Mac,
-                    Port: state.form.Port,
+                    Port: +state.form.Port,
                 }).then(() => {
                     ElMessage.success('已发送');
                 }).catch((e) => {
-                    ElMessage.error('发送失败');
+                    ElMessage.error('发送失败' + e);
                 });
             });
         }
