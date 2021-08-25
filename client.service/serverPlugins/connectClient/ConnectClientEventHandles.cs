@@ -169,11 +169,26 @@ namespace client.service.serverPlugins.connectClient
             List<string> ips = arg.Data.LocalIps.Split(',').Concat(new string[] { arg.Data.Ip }).ToList();
             foreach (string ip in ips)
             {
-                EventHandlers.SendMessage(new SendMessageEventArg
+                _ = Task.Run(() =>
                 {
-                    Address = new IPEndPoint(IPAddress.Parse(ip), arg.Data.Port),
-                    Data = new MessageConnectClientStep1AckModel { Id = ConnectId }
+                    //随便给目标客户端发个低TTL消息
+                    using Socket targetSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Udp);
+                    try
+                    {
+                        targetSocket.Ttl = (short)(RouteLevel + 2);
+                        targetSocket.SendTo(new byte[] { 1 }, new IPEndPoint(IPAddress.Parse(ip), arg.Data.Port));
+                    }
+                    catch (Exception)
+                    {
+                    }
+                    targetSocket.SafeClose();
                 });
+
+                //EventHandlers.SendMessage(new SendMessageEventArg
+                //{
+                //    Address = new IPEndPoint(IPAddress.Parse(ip), arg.Data.Port),
+                //    Data = new MessageConnectClientStep1AckModel { Id = ConnectId }
+                //});
             }
             //告诉服务器我已准备好
             EventHandlers.SendMessage(new SendMessageEventArg
@@ -248,7 +263,6 @@ namespace client.service.serverPlugins.connectClient
         public void OnConnectClientStep2Message(OnConnectClientStep2EventArg e)
         {
             OnConnectClientStep2Handler?.Invoke(this, e);
-
             List<string> ips = e.Data.LocalIps.Split(',').Concat(new string[] { e.Data.Ip }).ToList();
             foreach (string ip in ips)
             {
@@ -541,6 +555,7 @@ namespace client.service.serverPlugins.connectClient
         /// <param name="toid"></param>
         public void OnConnectClientStep3Message(OnConnectClientStep3EventArg e)
         {
+            Console.WriteLine($"{e.Data.Id}的连接");
             OnConnectClientStep3Handler?.Invoke(this, e);
             SendConnectClientStep4Message(new SendConnectClientStep4EventArg
             {
@@ -558,6 +573,7 @@ namespace client.service.serverPlugins.connectClient
         /// <param name="toid"></param>
         public void OnTcpConnectClientStep3Message(OnConnectClientStep3EventArg e)
         {
+
             if (connectTcpCache.TryGetValue(e.Data.Id, out ConnectTcpMessageCache cache))
             {
                 connectTcpCache.TryRemove(e.Data.Id, out _);
@@ -625,6 +641,7 @@ namespace client.service.serverPlugins.connectClient
         public void OnConnectClientStep4Message(OnConnectClientStep4EventArg e)
         {
 
+            Console.WriteLine($"{e.Data.Id}的回应");
             if (connectCache.TryRemove(e.Data.Id, out ConnectMessageCache cache))
             {
                 cache?.Callback(e);
