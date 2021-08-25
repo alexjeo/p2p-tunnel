@@ -37,7 +37,7 @@ namespace server.service.plugins
                     {
                         UDPServer.Instance.Send(new MessageRecvQueueModel<IMessageModelBase>
                         {
-                            Address = data.SourcePoint,
+                            Address = target.Address,
                             TcpCoket = null,
                             Data = model
                         });
@@ -46,8 +46,8 @@ namespace server.service.plugins
                     {
                         TCPServer.Instance.Send(new MessageRecvQueueModel<IMessageModelBase>
                         {
-                            Address = data.SourcePoint,
-                            TcpCoket = data.TcpSocket,
+                            Address = target.Address,
+                            TcpCoket = target.TcpSocket,
                             Data = model
                         });
                     }
