@@ -2,7 +2,7 @@
  * @Author: snltty
  * @Date: 2021-08-20 16:06:04
  * @LastEditors: snltty
- * @LastEditTime: 2021-08-20 17:17:31
+ * @LastEditTime: 2021-08-25 09:05:25
  * @version: v1.0.0
  * @Descripttion: 功能说明
  * @FilePath: \client.web.vue3\src\apis\upnp.js
@@ -25,5 +25,11 @@ export const sendUpnpDelMapping = (deviceIndex, mappingIndex) => {
     });
 }
 export const sendUpnpAddMapping = (model) => {
-    return sendWebsocketMsg(`upnp/add`, model);
+    return sendWebsocketMsg(`upnp/add`, {
+        Description: model.Description,
+        Lifetime: +model.Lifetime,
+        PrivatePort: + model.PrivatePort,
+        Protocol: +model.Protocol,
+        PublicPort: + model.PublicPort,
+    });
 }

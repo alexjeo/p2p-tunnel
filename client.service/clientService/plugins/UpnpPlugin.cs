@@ -83,6 +83,7 @@ namespace client.service.clientService.plugins
             }
             catch (Exception ex)
             {
+                Logger.Instance.Error(ex.Message);
                 arg.SetResultCode(-1, ex.Message);
             }
         }

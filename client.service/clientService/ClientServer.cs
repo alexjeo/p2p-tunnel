@@ -50,10 +50,10 @@ namespace client.service.clientService
                 switch (level)
                 {
                     case LogLevel.Debug:
-                        Logger.Instance.Info(message);
+                        //Logger.Instance.Info(message);
                         break;
                     case LogLevel.Info:
-                        Logger.Instance.Info(message);
+                        //Logger.Instance.Info(message);
                         break;
                     case LogLevel.Warn:
                         Logger.Instance.Info(message);
