@@ -147,6 +147,7 @@ namespace client.service.serverPlugins.clients
             if (clients.TryGetValue(e.Data.Id, out ClientInfo cacheClient) && cacheClient != null)
             {
                 cacheClient.Connected = true;
+                cacheClient.Connecting = false;
                 cacheClient.LastTime = Helper.GetTimeStamp();
                 cacheClient.Address = e.Packet.SourcePoint;
             }
@@ -297,7 +298,9 @@ namespace client.service.serverPlugins.clients
                     },
                     FailCallback = (e) =>
                     {
+                        Console.WriteLine(e.Msg);
                         SetClientTcpOffline(info.Id);
+                        info.TcpConnecting = false;
                     },
                     Id = info.Id,
                     Name = info.Name,

@@ -137,14 +137,14 @@ namespace client.service.serverPlugins.register
                             Timeout = 5 * 1000,
                             Callback = (result) =>
                             {
-                                AppShareData.Instance.ConnectId = result.Id;
                                 AppShareData.Instance.IsConnecting = false;
-                                AppShareData.Instance.Connected = true;
-                                AppShareData.Instance.TcpConnected = true;
                                 AppShareData.Instance.GroupId = result.GroupId;
                                 AppShareData.Instance.Ip = result.Ip;
-                                OnRegisterChange?.Invoke(this, true);
+                                AppShareData.Instance.ConnectId = result.Id;
+                                AppShareData.Instance.Connected = true;
+                                AppShareData.Instance.TcpConnected = true;
 
+                                OnRegisterChange?.Invoke(this, true);
                                 callback?.Invoke(string.Empty);
                             },
                             FailCallback = (fail) =>

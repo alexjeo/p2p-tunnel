@@ -40,17 +40,18 @@ namespace client.service.serverPlugins.register
         public void SendExitMessage()
         {
             requestCache = null;
+
+            SendMessageEventArg arg = new()
+            {
+                Address = UdpServer,
+                Data = new MessageExitModel
+                {
+                    Id = ConnectId,
+                }
+            };
+
             if (UdpServer != null)
             {
-                SendMessageEventArg arg = new()
-                {
-                    Address = UdpServer,
-                    Data = new MessageExitModel
-                    {
-                        Id = ConnectId,
-                    }
-                };
-
                 UDPServer.Instance.Send(new MessageRecvQueueModel<IMessageModelBase>
                 {
                     Address = arg.Address,
@@ -69,9 +70,8 @@ namespace client.service.serverPlugins.register
                 {
                     State = false
                 });
-
-                OnSendExitMessageHandler?.Invoke(this, arg);
             }
+            OnSendExitMessageHandler?.Invoke(this, arg);
             EventHandlers.Sequence = 0;
         }
 
@@ -219,7 +219,6 @@ namespace client.service.serverPlugins.register
         {
             if (requestCache != null)
             {
-                requestCache.Callback?.Invoke(arg.Data);
                 SendRegisterTcpStateChange(new RegisterTcpEventArg
                 {
                     State = true,
@@ -227,6 +226,7 @@ namespace client.service.serverPlugins.register
                     ClientName = requestCache.ClientName,
                     Ip = arg.Data.Ip,
                 });
+                requestCache.Callback?.Invoke(arg.Data);
                 requestCache = null;
                 OnRegisterTcpResultHandler?.Invoke(this, arg);
             }

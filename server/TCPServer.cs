@@ -32,8 +32,8 @@ namespace server
         }
 
         public ConcurrentDictionary<long, ReceiveModel> clients = new ConcurrentDictionary<long, ReceiveModel>();
+        public ConcurrentDictionary<int, ServerModel> servers = new ConcurrentDictionary<int, ServerModel>();
 
-        public Socket TcpSocket { get; set; } = null;
         private bool IsStart { get; set; } = false;
         public bool IsListen { get; private set; } = false;
 
@@ -46,41 +46,54 @@ namespace server
 
             IsStart = true;
             IsListen = true;
-
-            TcpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            TcpSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-            TcpSocket.Bind(new IPEndPoint(IPAddress.Any, port));
-            TcpSocket.Listen(int.MaxValue);
-
-            _ = Task.Factory.StartNew(() =>
-              {
-                  while (IsStart)
-                  {
-                      _ = acceptDone.Reset();
-                      try
-                      {
-                          _ = TcpSocket.BeginAccept(new AsyncCallback(Accept), TcpSocket);
-                      }
-                      catch (Exception)
-                      {
-                          Stop();
-                          break;
-                      }
-                      _ = acceptDone.WaitOne();
-                  }
-
-              }, TaskCreationOptions.LongRunning);
+            BindAccept(port);
         }
 
-        private readonly ManualResetEvent acceptDone = new ManualResetEvent(false);
+        public void BindAccept(int port)
+        {
+            if (servers.ContainsKey(port)) return;
+
+            var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+            socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontRoute, true);
+            socket.Bind(new IPEndPoint(IPAddress.Any, port));
+            socket.Listen(int.MaxValue);
+
+            ServerModel server = new ServerModel
+            {
+                AcceptDone = new ManualResetEvent(false),
+                Socket = socket
+            };
+            servers.TryAdd(port, server);
+
+            _ = Task.Factory.StartNew(() =>
+            {
+                while (IsStart)
+                {
+                    server.AcceptDone.Reset();
+                    try
+                    {
+                        _ = socket.BeginAccept(new AsyncCallback(Accept), server);
+                    }
+                    catch (Exception)
+                    {
+                        Stop();
+                        break;
+                    }
+                    _ = server.AcceptDone.WaitOne();
+                }
+
+            }, TaskCreationOptions.LongRunning);
+        }
+
         private void Accept(IAsyncResult result)
         {
-            _ = acceptDone.Set();
+            ServerModel server = (ServerModel)result.AsyncState;
+            _ = server.AcceptDone.Set();
 
-            Socket listener = (Socket)result.AsyncState;
             try
             {
-                Socket client = listener.EndAccept(result);
+                Socket client = server.Socket.EndAccept(result);
                 BindReceive(client);
             }
             catch (Exception)
@@ -178,9 +191,17 @@ namespace server
                     client.Socket.SafeClose();
                 }
             }
-
-            TcpSocket.SafeClose();
             clients.Clear();
+            foreach (ServerModel server in servers.Values)
+            {
+
+                if (server != null && server.Socket != null)
+                {
+                    server.AcceptDone.Dispose();
+                    server.Socket.SafeClose();
+                }
+            }
+            servers.Clear();
         }
 
         public void Send(MessageRecvQueueModel<IMessageModelBase> msg)
@@ -212,5 +233,11 @@ namespace server
         public IPEndPoint Address { get; set; }
         public byte[] Buffer { get; set; }
         public List<byte> CacheBuffer { get; set; } = new List<byte>();
+    }
+
+    public class ServerModel
+    {
+        public Socket Socket { get; set; }
+        public ManualResetEvent AcceptDone { get; set; }
     }
 }

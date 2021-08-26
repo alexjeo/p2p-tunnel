@@ -2,7 +2,7 @@
  * @Author: snltty
  * @Date: 2021-08-19 21:50:16
  * @LastEditors: snltty
- * @LastEditTime: 2021-08-26 09:36:31
+ * @LastEditTime: 2021-08-26 10:31:18
  * @version: v1.0.0
  * @Descripttion: 功能说明
  * @FilePath: \client.web.vue3\src\views\Home.vue
@@ -25,7 +25,7 @@
             <el-table-column prop="todo" label="操作" width="200" fixed="right" class="t-c">
                 <template #default="scope">
                     <div class="t-c">
-                        <el-button :disabled="scope.row.Connected && scope.row.TcpConnected" :loading="scope.row.Connecting || scope.row.TcpConnected" size="mini" @click="handleConnect(scope.row)">连接</el-button>
+                        <el-button :disabled="scope.row.Connected && scope.row.TcpConnected" :loading="scope.row.Connecting || scope.row.TcpConnecting" size="mini" @click="handleConnect(scope.row)">连接</el-button>
                         <el-button :loading="scope.row.Connecting || scope.row.TcpConnecting" size="mini" @click="handleReset(scope.row)">重启它</el-button>
                     </div>
                 </template>

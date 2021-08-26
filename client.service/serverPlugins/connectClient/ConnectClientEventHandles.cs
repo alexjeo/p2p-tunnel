@@ -204,6 +204,7 @@ namespace client.service.serverPlugins.connectClient
             OnTcpConnectClientStep1Handler?.Invoke(this, e);
 
             List<string> ips = e.Data.LocalIps.Split(',').Concat(new string[] { e.Data.Ip }).ToList();
+
             foreach (string ip in ips)
             {
                 _ = Task.Run(() =>
