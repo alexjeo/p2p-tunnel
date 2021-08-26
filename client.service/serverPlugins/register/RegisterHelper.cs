@@ -106,6 +106,7 @@ namespace client.service.serverPlugins.register
                         ResetLastTime();
 
                         AppShareData.Instance.ClientPort = Helper.GetRandomPort();
+
                         AppShareData.Instance.ClientTcpPort2 = AppShareData.Instance.ClientTcpPort = Helper.GetRandomPort(new List<int> { AppShareData.Instance.ClientPort });
                         TCPServer.Instance.Start(AppShareData.Instance.ClientTcpPort);
 
@@ -115,6 +116,7 @@ namespace client.service.serverPlugins.register
                         serverSocket.Bind(new IPEndPoint(IPAddress.Any, AppShareData.Instance.ClientTcpPort));
                         AppShareData.Instance.TcpServer = serverSocket;
                         serverSocket.Connect(new IPEndPoint(IPAddress.Parse(AppShareData.Instance.ServerIp), AppShareData.Instance.ServerTcpPort));
+
                         TCPServer.Instance.BindReceive(serverSocket);
 
                         string mac = string.Empty;
@@ -145,11 +147,11 @@ namespace client.service.serverPlugins.register
                                 AppShareData.Instance.TcpConnected = true;
                                 if (result.TcpPort != AppShareData.Instance.ClientTcpPort2)
                                 {
-                                    AppShareData.Instance.ClientTcpPort2 = result.TcpPort;
+                                   // AppShareData.Instance.ClientTcpPort2 = result.TcpPort;
                                 }
 
-                                Logger.Instance.Info($"外网UDP端口:{result.Port}");
-                                Logger.Instance.Info($"外网TCP端口:{result.TcpPort}");
+                                Logger.Instance.Error($"外网UDP端口:{result.Port}");
+                                Logger.Instance.Error($"外网TCP端口:{result.TcpPort}");
 
                                 OnRegisterChange?.Invoke(this, true);
                                 callback?.Invoke(string.Empty);

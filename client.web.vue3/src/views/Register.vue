@@ -2,7 +2,7 @@
  * @Author: snltty
  * @Date: 2021-08-19 22:30:19
  * @LastEditors: snltty
- * @LastEditTime: 2021-08-23 16:27:09
+ * @LastEditTime: 2021-08-26 16:37:50
  * @version: v1.0.0
  * @Descripttion: 功能说明
  * @FilePath: \client.web.vue3\src\views\Register.vue
@@ -157,8 +157,8 @@ export default {
             sendConfigMsg({
                 ClientName: registerState.ClientName,
                 ServerIp: registerState.ServerIp,
-                ServerPort: registerState.ServerPort,
-                ServerTcpPort: registerState.ServerTcpPort,
+                ServerPort: +registerState.ServerPort,
+                ServerTcpPort: +registerState.ServerTcpPort,
                 GroupId: registerState.GroupId,
                 AutoReg: registerState.AutoReg,
                 UseMac: registerState.UseMac,

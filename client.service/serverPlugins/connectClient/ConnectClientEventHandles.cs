@@ -209,7 +209,7 @@ namespace client.service.serverPlugins.connectClient
             {
                 _ = Task.Run(() =>
                 {
-                    Logger.Instance.Info($"低TTL：{ClientTcpPort}->{ip}：{e.Data.LocalTcpPort}");
+                    Logger.Instance.Error($"低TTL：{ClientTcpPort}->{ip}：{e.Data.LocalTcpPort}");
                     //随便给目标客户端发个低TTL消息
                     using Socket targetSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                     try
@@ -300,7 +300,7 @@ namespace client.service.serverPlugins.connectClient
                         targetSocket.Bind(new IPEndPoint(IPAddress.Any, ClientTcpPort));
                         string ip = length >= ips.Length ? ips[ips.Length - 1] : ips[length];
 
-                        Logger.Instance.Info($"连接：{ip}：{e.Data.LocalTcpPort}");
+                        Logger.Instance.Error($"连接：{ip}：{e.Data.LocalTcpPort}");
                         IAsyncResult result = targetSocket.BeginConnect(new IPEndPoint(IPAddress.Parse(ip), e.Data.LocalTcpPort), null, null);
                         _ = result.AsyncWaitHandle.WaitOne(2000, false);
 
@@ -417,7 +417,7 @@ namespace client.service.serverPlugins.connectClient
             OnTcpConnectClientStep2RetryHandler?.Invoke(this, e);
             Task.Run(() =>
             {
-                Logger.Instance.Info($"低TTL：{ClientTcpPort}->{e.Data.Ip}：{e.Data.LocalTcpPort}");
+                Logger.Instance.Error($"低TTL：{ClientTcpPort}->{e.Data.Ip}：{e.Data.LocalTcpPort}");
                 //随便给目标客户端发个低TTL消息
                 using Socket targetSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 targetSocket.Ttl = (short)(RouteLevel + 2);

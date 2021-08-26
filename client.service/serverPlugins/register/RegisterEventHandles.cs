@@ -130,7 +130,6 @@ namespace client.service.serverPlugins.register
         /// <param name="arg"></param>
         public void SendTcpRegisterMessage(long id, string clientName, string groupId = "", string mac = "", int localport = 0)
         {
-            Logger.Instance.Info($"发送TCP注册:{localport}");
             EventHandlers.SendTcpMessage(new SendTcpMessageEventArg
             {
                 Socket = TcpServer,

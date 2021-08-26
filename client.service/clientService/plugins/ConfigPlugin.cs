@@ -12,6 +12,8 @@ namespace client.service.clientService.plugins
         {
             SettingModel model = Helper.DeJsonSerializer<SettingModel>(arg.Content);
 
+           
+
             AppShareData.Instance.ClientName = model.ClientName;
             AppShareData.Instance.GroupId = model.GroupId;
             AppShareData.Instance.AutoReg = model.AutoReg;
@@ -20,7 +22,6 @@ namespace client.service.clientService.plugins
             AppShareData.Instance.ServerIp = model.ServerIp;
             AppShareData.Instance.ServerPort = model.ServerPort;
             AppShareData.Instance.ServerTcpPort = model.ServerTcpPort;
-
             AppShareData.Instance.SaveConfig();
         }
     }

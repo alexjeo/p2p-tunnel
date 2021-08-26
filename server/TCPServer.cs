@@ -34,7 +34,7 @@ namespace server
         public ConcurrentDictionary<long, ReceiveModel> clients = new ConcurrentDictionary<long, ReceiveModel>();
         public ConcurrentDictionary<int, ServerModel> servers = new ConcurrentDictionary<int, ServerModel>();
 
-        private bool IsStart { get; set; } = false;
+        public bool IsStart { get; set; } = false;
         public bool IsListen { get; private set; } = false;
 
         public void Start(int port)
@@ -55,7 +55,6 @@ namespace server
 
             var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-            socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontRoute, true);
             socket.Bind(new IPEndPoint(IPAddress.Any, port));
             socket.Listen(int.MaxValue);
 
