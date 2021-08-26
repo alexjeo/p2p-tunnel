@@ -163,7 +163,7 @@ namespace client.service.serverPlugins.clients
             if (clients.TryGetValue(e.Data.Id, out ClientInfo cacheClient) && cacheClient != null)
             {
                 cacheClient.TcpConnected = true;
-                cacheClient.Connecting = false;
+                cacheClient.TcpConnecting = false;
                 cacheClient.TcpLastTime = Helper.GetTimeStamp();
                 cacheClient.Socket = e.Packet.TcpSocket;
             }
@@ -198,6 +198,7 @@ namespace client.service.serverPlugins.clients
                             continue;
                         }
                         SetClientOffline(offid);
+                        SetClientTcpOffline(offid);
                         _ = RemoveClient(offid);
                     }
                     //新上线的
@@ -253,7 +254,6 @@ namespace client.service.serverPlugins.clients
             {
                 return;
             }
-
             if (info.Connecting == false && info.Connected == false)
             {
                 info.Connecting = true;
@@ -282,6 +282,7 @@ namespace client.service.serverPlugins.clients
 
             if (info.TcpConnecting == false && info.TcpConnected == false)
             {
+                info.TcpConnecting = true;
                 ConnectClientEventHandles.Instance.SendTcpConnectClientMessage(new ConnectTcpParams
                 {
                     Callback = (e) =>
