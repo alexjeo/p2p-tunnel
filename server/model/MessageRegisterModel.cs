@@ -33,6 +33,9 @@ namespace server.model
 
         [ProtoMember(6)]
         public string Mac { get; set; } = string.Empty;
+
+        [ProtoMember(7)]
+        public int LocalTcpPort { get; set; } = 0;
     }
 
     [ProtoContract]
@@ -66,5 +69,8 @@ namespace server.model
 
         [ProtoMember(9)]
         public string Mac { get; set; } = string.Empty;
+
+        [ProtoMember(10)]
+        public int LocalTcpPort { get; set; } = 0;
     }
 }

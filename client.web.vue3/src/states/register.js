@@ -2,7 +2,7 @@
  * @Author: snltty
  * @Date: 2021-08-19 22:39:45
  * @LastEditors: snltty
- * @LastEditTime: 2021-08-23 16:17:54
+ * @LastEditTime: 2021-08-26 12:48:40
  * @version: v1.0.0
  * @Descripttion: 功能说明
  * @FilePath: \client.web.vue3\src\states\register.js
@@ -11,6 +11,7 @@
 
 import { provide, inject, reactive } from "vue";
 import { getRegisterInfo } from '../apis/register'
+import { subWebsocketState } from '../apis/request'
 
 const provideRegisterKey = Symbol();
 export const provideRegister = () => {
@@ -48,7 +49,6 @@ export const provideRegister = () => {
             state.ConnectId = json.ConnectId;
             state.IsConnecting = json.IsConnecting;
             state.RouteLevel = json.RouteLevel;
-            state.Connected = json.Connected;
             if (!state.GroupId) {
                 state.GroupId = json.GroupId;
             }
@@ -60,6 +60,11 @@ export const provideRegister = () => {
         });
     };
     fn();
+
+    subWebsocketState(() => {
+        state.Connected = false;
+        state.TcpConnected = false;
+    })
 }
 export const injectRegister = () => {
     return inject(provideRegisterKey);

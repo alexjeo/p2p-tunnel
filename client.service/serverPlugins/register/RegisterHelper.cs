@@ -106,7 +106,7 @@ namespace client.service.serverPlugins.register
                         ResetLastTime();
 
                         AppShareData.Instance.ClientPort = Helper.GetRandomPort();
-                        AppShareData.Instance.ClientTcpPort = Helper.GetRandomPort(new List<int> { AppShareData.Instance.ClientPort });
+                        AppShareData.Instance.ClientTcpPort2 = AppShareData.Instance.ClientTcpPort = Helper.GetRandomPort(new List<int> { AppShareData.Instance.ClientPort });
                         TCPServer.Instance.Start(AppShareData.Instance.ClientTcpPort);
 
                         //TCP 开始监听
@@ -116,7 +116,6 @@ namespace client.service.serverPlugins.register
                         AppShareData.Instance.TcpServer = serverSocket;
                         serverSocket.Connect(new IPEndPoint(IPAddress.Parse(AppShareData.Instance.ServerIp), AppShareData.Instance.ServerTcpPort));
                         TCPServer.Instance.BindReceive(serverSocket);
-
 
                         string mac = string.Empty;
                         if (AppShareData.Instance.UseMac)
@@ -132,6 +131,7 @@ namespace client.service.serverPlugins.register
                         {
                             ClientName = AppShareData.Instance.ClientName,
                             GroupId = AppShareData.Instance.GroupId,
+                            LocalTcpPort = 0,//AppShareData.Instance.ClientTcpPort,
                             Mac = mac,
                             LocalIps = IPEndPoint.Parse(serverSocket.LocalEndPoint.ToString()).Address.ToString(),
                             Timeout = 5 * 1000,
@@ -143,6 +143,13 @@ namespace client.service.serverPlugins.register
                                 AppShareData.Instance.ConnectId = result.Id;
                                 AppShareData.Instance.Connected = true;
                                 AppShareData.Instance.TcpConnected = true;
+                                if (result.TcpPort != AppShareData.Instance.ClientTcpPort2)
+                                {
+                                    AppShareData.Instance.ClientTcpPort2 = result.TcpPort;
+                                }
+
+                                Logger.Instance.Info($"外网UDP端口:{result.Port}");
+                                Logger.Instance.Info($"外网TCP端口:{result.TcpPort}");
 
                                 OnRegisterChange?.Invoke(this, true);
                                 callback?.Invoke(string.Empty);

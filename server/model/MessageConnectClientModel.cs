@@ -70,6 +70,9 @@ namespace server.model
         [ProtoMember(7)]
         public string LocalIps { get; set; } = string.Empty;
 
+        [ProtoMember(8)]
+        public int LocalTcpPort { get; set; } = 0;
+
     }
 
     [ProtoContract]
@@ -157,6 +160,9 @@ namespace server.model
         [ProtoMember(7)]
         public string LocalIps { get; set; } = string.Empty;
 
+        [ProtoMember(8)]
+        public int LocalTcpPort { get; set; } = 0;
+
     }
 
     /// <summary>
@@ -197,6 +203,9 @@ namespace server.model
 
         [ProtoMember(7)]
         public string LocalIps { get; set; } = string.Empty;
+
+        [ProtoMember(8)]
+        public int LocalTcpPort { get; set; } = 0;
 
     }
     /// <summary>

@@ -44,7 +44,6 @@ namespace server
 
             IpepServer = new IPEndPoint(IPAddress.Any, port);
             UdpcRecv = new UdpClient(IpepServer);
-
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 const uint IOC_IN = 0x80000000;

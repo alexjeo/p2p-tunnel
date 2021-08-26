@@ -45,7 +45,8 @@ namespace server.service.plugins
                                 Name = source.Name,
                                 Port = source.Address.Port,
                                 TcpPort = source.TcpPort,
-                                LocalIps = source.LocalIps
+                                LocalIps = source.LocalIps,
+                                LocalTcpPort = source.LocalPort == 0 ? source.TcpPort : source.LocalPort
                             }
                         });
                     }
@@ -63,7 +64,8 @@ namespace server.service.plugins
                                 Name = target.Name,
                                 Port = target.Address.Port,
                                 TcpPort = target.TcpPort,
-                                LocalIps = target.LocalIps
+                                LocalIps = target.LocalIps,
+                                LocalTcpPort = target.LocalPort == 0 ? target.TcpPort : target.LocalPort
                             }
                         });
                     }
@@ -109,7 +111,8 @@ namespace server.service.plugins
                                 Name = source.Name,
                                 Port = source.Address.Port,
                                 TcpPort = source.TcpPort,
-                                LocalIps = source.LocalIps
+                                LocalIps = source.LocalIps,
+                                LocalTcpPort = source.LocalPort == 0 ? source.TcpPort : source.LocalPort
 
                             }
                         });
@@ -128,7 +131,8 @@ namespace server.service.plugins
                                 Name = source.Name,
                                 Port = source.Address.Port,
                                 TcpPort = source.TcpPort,
-                                LocalIps = source.LocalIps
+                                LocalIps = source.LocalIps,
+                                LocalTcpPort = source.LocalPort == 0 ? source.TcpPort : source.LocalPort
                             }
                         });
                     }
@@ -171,7 +175,8 @@ namespace server.service.plugins
                                 Ip = source.Address.Address.ToString(),
                                 Port = source.Address.Port,
                                 TcpPort = source.TcpPort,
-                                LocalIps = source.LocalIps
+                                LocalIps = source.LocalIps,
+                                LocalTcpPort = source.LocalPort == 0 ? source.TcpPort : source.LocalPort
                             }
                         });
                     }
@@ -188,7 +193,8 @@ namespace server.service.plugins
                                 Ip = source.Address.Address.ToString(),
                                 Port = source.Address.Port,
                                 TcpPort = source.TcpPort,
-                                LocalIps = source.LocalIps
+                                LocalIps = source.LocalIps,
+                                LocalTcpPort = source.LocalPort == 0 ? source.TcpPort : source.LocalPort
                             }
                         });
                     }

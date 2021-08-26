@@ -16,6 +16,7 @@ namespace client.service.serverPlugins.reset
 
         public void Excute(PluginExcuteModel data, ServerType serverType)
         {
+           
             MessageResetModel model = data.Packet.Chunk.ProtobufDeserialize<MessageResetModel>();
             RegisterHelper.Instance.Start();
         }

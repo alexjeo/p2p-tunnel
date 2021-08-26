@@ -57,6 +57,7 @@ namespace client.service
         public int ClientPort { get; set; } = 0;
         //客户端TCP端口
         public int ClientTcpPort { get; set; } = 0;
+        public int ClientTcpPort2 { get; set; } = 0;
 
         //是否正在连接
         public bool IsConnecting { get; set; } = false;

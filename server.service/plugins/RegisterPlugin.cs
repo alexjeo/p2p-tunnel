@@ -33,7 +33,8 @@ namespace server.service.plugins
                         TcpPort = 0,
                         GroupId = model.GroupId,
                         LocalIps = model.LocalIps,
-                        Mac = model.Mac
+                        Mac = model.Mac,
+                        LocalPort = model.LocalTcpPort
 
                     };
                     long id = ClientRegisterCache.Instance.Add(add, 0);
@@ -49,7 +50,8 @@ namespace server.service.plugins
                             Port = data.SourcePoint.Port,
                             TcpPort = 0,
                             GroupId = add.GroupId,
-                            Mac = add.Mac
+                            Mac = add.Mac,
+                            LocalTcpPort = add.LocalPort
                         }
                     });
                 }
@@ -87,7 +89,8 @@ namespace server.service.plugins
                         Port = data.SourcePoint.Port,
                         TcpPort = tcpPort,
                         GroupId = model.GroupId,
-                        Mac = model.Mac
+                        Mac = model.Mac,
+                        LocalTcpPort = model.LocalTcpPort
                     }
                 });
             }

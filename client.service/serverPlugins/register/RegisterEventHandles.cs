@@ -96,7 +96,9 @@ namespace client.service.serverPlugins.register
                     Name = param.ClientName,
                     GroupId = param.GroupId,
                     LocalIps = param.LocalIps,
-                    Mac = param.Mac
+                    Mac = param.Mac,
+                    LocalTcpPort = param.LocalTcpPort
+
                 }
             });
 
@@ -126,8 +128,9 @@ namespace client.service.serverPlugins.register
         /// 发送Tcp注册消息
         /// </summary>
         /// <param name="arg"></param>
-        public void SendTcpRegisterMessage(long id, string clientName, string groupId = "", string mac = "")
+        public void SendTcpRegisterMessage(long id, string clientName, string groupId = "", string mac = "", int localport = 0)
         {
+            Logger.Instance.Info($"发送TCP注册:{localport}");
             EventHandlers.SendTcpMessage(new SendTcpMessageEventArg
             {
                 Socket = TcpServer,
@@ -136,7 +139,8 @@ namespace client.service.serverPlugins.register
                     Id = id,
                     Name = clientName,
                     GroupId = groupId,
-                    Mac = mac
+                    Mac = mac,
+                    LocalTcpPort = localport
                 }
             });
             OnSendTcpRegisterMessageHandler?.Invoke(this, clientName);
@@ -182,7 +186,7 @@ namespace client.service.serverPlugins.register
             {
                 if (arg.Data.Code == 0)
                 {
-                    SendTcpRegisterMessage(arg.Data.Id, requestCache.ClientName, arg.Data.GroupId, arg.Data.Mac);
+                    SendTcpRegisterMessage(arg.Data.Id, requestCache.ClientName, arg.Data.GroupId, arg.Data.Mac, arg.Data.LocalTcpPort);
                     SendRegisterStateChange(new RegisterEventArg
                     {
                         ServerAddress = arg.Packet.SourcePoint,
@@ -266,6 +270,8 @@ namespace client.service.serverPlugins.register
         public string LocalIps { get; set; } = string.Empty;
         public string Mac { get; set; } = string.Empty;
         public int Timeout { get; set; } = 15 * 1000;
+        public int LocalTcpPort { get; set; } = 0;
+
         public Action<MessageRegisterResultModel> Callback { get; set; } = null;
         public Action<RegisterMessageFailModel> FailCallback { get; set; } = null;
     }
