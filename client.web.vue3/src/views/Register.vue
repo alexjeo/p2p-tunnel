@@ -2,7 +2,7 @@
  * @Author: snltty
  * @Date: 2021-08-19 22:30:19
  * @LastEditors: snltty
- * @LastEditTime: 2021-08-26 16:37:50
+ * @LastEditTime: 2021-08-26 17:30:04
  * @version: v1.0.0
  * @Descripttion: 功能说明
  * @FilePath: \client.web.vue3\src\views\Register.vue
@@ -72,6 +72,11 @@
                     <el-col :span="8">
                         <el-form-item label="外网距离">
                             <el-input readonly v-model="RouteLevel"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="TCP端口">
+                            <el-input readonly v-model="ClientTcpPort2"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>

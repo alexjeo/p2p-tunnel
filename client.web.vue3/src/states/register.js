@@ -2,7 +2,7 @@
  * @Author: snltty
  * @Date: 2021-08-19 22:39:45
  * @LastEditors: snltty
- * @LastEditTime: 2021-08-26 12:48:40
+ * @LastEditTime: 2021-08-26 17:30:19
  * @version: v1.0.0
  * @Descripttion: 功能说明
  * @FilePath: \client.web.vue3\src\states\register.js
@@ -21,6 +21,7 @@ export const provideRegister = () => {
         AutoReg: false,
         UseMac: false,
         ClientTcpPort: 0,
+        ClientTcpPort2: 0,
         Connected: 0,
         TcpConnected: 0,
         Ip: '',
@@ -43,6 +44,7 @@ export const provideRegister = () => {
             state.Connected = json.Connected;
             state.ClientPort = json.ClientPort;
             state.ClientTcpPort = json.ClientTcpPort;
+            state.ClientTcpPort2 = json.ClientTcpPort2;
             state.TcpConnected = json.TcpConnected;
             state.Ip = json.Ip;
             state.Mac = json.Mac;
