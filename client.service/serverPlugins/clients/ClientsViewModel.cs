@@ -66,8 +66,12 @@ namespace client.service.serverPlugins.clients
 
         public bool IsTimeout()
         {
-            long time = Helper.GetTimeStamp();
-            return (LastTime > 0 && time - LastTime > 20000) || (TcpLastTime > 0 && time - TcpLastTime > 20000);
+            return (LastTime > 0 && Helper.GetTimeStamp() - LastTime > 20000);
+        }
+
+        public bool IsTcpTimeout()
+        {
+            return (TcpLastTime > 0 && Helper.GetTimeStamp() - TcpLastTime > 20000);
         }
     }
 }
