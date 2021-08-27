@@ -34,18 +34,22 @@ namespace server
         public ConcurrentDictionary<long, ReceiveModel> clients = new ConcurrentDictionary<long, ReceiveModel>();
         public ConcurrentDictionary<int, ServerModel> servers = new ConcurrentDictionary<int, ServerModel>();
 
-        public bool IsStart { get; set; } = false;
-        public bool IsListen { get; private set; } = false;
+        private CancellationTokenSource cancellationTokenSource;
+        private bool Running
+        {
+            get
+            {
+                return cancellationTokenSource != null && !cancellationTokenSource.IsCancellationRequested;
+            }
+        }
 
         public void Start(int port)
         {
-            if (IsStart)
+            if (Running)
             {
                 return;
             }
-
-            IsStart = true;
-            IsListen = true;
+            cancellationTokenSource = new CancellationTokenSource();
             BindAccept(port);
         }
 
@@ -65,9 +69,9 @@ namespace server
             };
             servers.TryAdd(port, server);
 
-            _ = Task.Factory.StartNew(() =>
+            _ = Task.Factory.StartNew((e) =>
             {
-                while (IsStart)
+                while (!cancellationTokenSource.IsCancellationRequested)
                 {
                     server.AcceptDone.Reset();
                     try
@@ -82,7 +86,7 @@ namespace server
                     _ = server.AcceptDone.WaitOne();
                 }
 
-            }, TaskCreationOptions.LongRunning);
+            }, TaskCreationOptions.LongRunning, cancellationTokenSource.Token);
         }
 
         private void Accept(IAsyncResult result)
@@ -111,7 +115,7 @@ namespace server
                     result.AsyncWaitHandle.Close();
                     if (length > 0)
                     {
-                        if (IsStart)
+                        if (Running)
                         {
                             if (length == model.Buffer.Length)
                             {
@@ -123,8 +127,8 @@ namespace server
                                 Array.Copy(model.Buffer, 0, bytes, 0, bytes.Length);
                                 Receive(model, bytes);
                             }
+                            _ = model.Socket.BeginReceive(model.Buffer, 0, model.Buffer.Length, SocketFlags.None, new AsyncCallback(Receive), model);
                         }
-                        _ = model.Socket.BeginReceive(model.Buffer, 0, model.Buffer.Length, SocketFlags.None, new AsyncCallback(Receive), model);
                     }
                     else
                     {
@@ -181,7 +185,7 @@ namespace server
 
         public void Stop()
         {
-            IsStart = false;
+            cancellationTokenSource.Cancel();
             foreach (ReceiveModel client in clients.Values)
             {
 
@@ -205,7 +209,7 @@ namespace server
 
         public void Send(MessageRecvQueueModel<IMessageModelBase> msg)
         {
-            if (IsStart)
+            if (Running)
             {
                 TcpPacket tcpPackets = msg.Data.SerializeTcpMessage();
                 if (msg.TcpCoket != null && msg.TcpCoket.Connected)

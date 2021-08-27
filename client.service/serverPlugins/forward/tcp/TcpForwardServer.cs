@@ -22,11 +22,10 @@ namespace client.service.serverPlugins.forward.tcp
         {
         }
 
-        private bool IsStart { get; set; } = false;
         private long requestId = 0;
         public event EventHandler<TcpForwardRequestModel> OnRequest;
-        public ConcurrentDictionary<long, Socket> clients = new();
-        public ConcurrentDictionary<int, Socket> services = new();
+        public ConcurrentDictionary<long, ClientCacheModel> clients = new();
+        public ConcurrentDictionary<int, ServerModel> services = new();
 
         public event EventHandler<ListeningChangeModel> OnListeningChange;
 
@@ -42,9 +41,15 @@ namespace client.service.serverPlugins.forward.tcp
             socket.Bind(new IPEndPoint(IPAddress.Any, mapping.SourcePort));
             socket.Listen(int.MaxValue);
 
-            IsStart = true;
 
-            _ = services.TryAdd(mapping.SourcePort, socket);
+            ServerModel server = new ServerModel
+            {
+                CancelToken = new CancellationTokenSource(),
+                AcceptDone = new ManualResetEvent(false),
+                Socket = socket,
+                SourcePort = mapping.SourcePort
+            };
+            _ = services.TryAdd(mapping.SourcePort, server);
             OnListeningChange?.Invoke(this, new ListeningChangeModel
             {
                 SourcePort = mapping.SourcePort,
@@ -57,12 +62,11 @@ namespace client.service.serverPlugins.forward.tcp
             ClientInfo targetClient = mapping.Client;
             TcpForwardAliveTypes aliveType = mapping.AliveType;
 
-            ManualResetEvent acceptDone = new(false);
             _ = Task.Factory.StartNew(() =>
             {
-                while (IsStart)
+                while (!server.CancelToken.IsCancellationRequested)
                 {
-                    _ = acceptDone.Reset();
+                    _ = server.AcceptDone.Reset();
                     try
                     {
                         _ = socket.BeginAccept(new AsyncCallback(Accept), new ClientModel2
@@ -73,16 +77,17 @@ namespace client.service.serverPlugins.forward.tcp
                             TargetIp = targetIp,
                             SourceSocket = socket,
                             SourcePort = sourcePort,
-                            AcceptDone = acceptDone
+                            AcceptDone = server.AcceptDone
                         });
                     }
                     catch (Exception)
                     {
+                        Stop(sourcePort);
                         services.TryRemove(sourcePort, out _);
-                        acceptDone.Dispose();
+                        server.AcceptDone.Dispose();
                         break;
                     }
-                    _ = acceptDone.WaitOne();
+                    _ = server.AcceptDone.WaitOne();
                 }
 
             }, TaskCreationOptions.LongRunning);
@@ -99,7 +104,7 @@ namespace client.service.serverPlugins.forward.tcp
                 Socket socket = server.SourceSocket.EndAccept(result);
                 _ = Interlocked.Increment(ref requestId);
                 long _requestId = requestId;
-                _ = clients.TryAdd(_requestId, socket);
+                _ = clients.TryAdd(_requestId, new ClientCacheModel { SourcePort = server.SourcePort, Socket = socket });
 
                 ClientModel2 client = new()
                 {
@@ -122,13 +127,13 @@ namespace client.service.serverPlugins.forward.tcp
             catch (Exception)
             {
                 Stop(server.SourcePort);
-                server.AcceptDone.Dispose();
+
             }
         }
 
         public void BindReceive(ClientModel2 client)
         {
-            Task.Factory.StartNew(() =>
+            Task.Factory.StartNew((e) =>
             {
                 while (client.SourceSocket.Connected && clients.ContainsKey(client.RequestId))
                 {
@@ -194,13 +199,13 @@ namespace client.service.serverPlugins.forward.tcp
 
         public void Response(TcpForwardModel model)
         {
-            if (clients.TryGetValue(model.RequestId, out Socket socket) && socket != null)
+            if (clients.TryGetValue(model.RequestId, out ClientCacheModel client) && client != null)
             {
                 try
                 {
-                    if (socket.Connected)
+                    if (client.Socket.Connected)
                     {
-                        int length = socket.Send(model.Buffer, SocketFlags.None);
+                        int length = client.Socket.Send(model.Buffer, SocketFlags.None);
                     }
                 }
                 catch (Exception)
@@ -208,7 +213,7 @@ namespace client.service.serverPlugins.forward.tcp
                 }
                 if (model.AliveType == TcpForwardAliveTypes.UNALIVE)
                 {
-                    socket.SafeClose();
+                    client.Socket.SafeClose();
                     _ = clients.TryRemove(model.RequestId, out _);
                 }
             }
@@ -216,18 +221,18 @@ namespace client.service.serverPlugins.forward.tcp
 
         public void Fail(TcpForwardModel failModel, string body = "snltty")
         {
-            if (clients.TryGetValue(failModel.RequestId, out Socket socket) && socket != null)
+            if (clients.TryRemove(failModel.RequestId, out ClientCacheModel client) && client != null)
             {
                 if (failModel.AliveType == TcpForwardAliveTypes.UNALIVE)
                 {
                     try
                     {
                         var bodyBytes = Encoding.UTF8.GetBytes(body);
-                        _ = socket.Send(Encoding.UTF8.GetBytes("HTTP/1.1 200 OK\r\n"));
-                        _ = socket.Send(Encoding.UTF8.GetBytes("Content-Type: text/html;charset=utf-8\r\n"));
-                        _ = socket.Send(Encoding.UTF8.GetBytes($"Content-Length:{bodyBytes.Length}\r\n"));
-                        _ = socket.Send(Encoding.UTF8.GetBytes("\r\n"));
-                        _ = socket.Send(bodyBytes);
+                        _ = client.Socket.Send(Encoding.UTF8.GetBytes("HTTP/1.1 200 OK\r\n"));
+                        _ = client.Socket.Send(Encoding.UTF8.GetBytes("Content-Type: text/html;charset=utf-8\r\n"));
+                        _ = client.Socket.Send(Encoding.UTF8.GetBytes($"Content-Length:{bodyBytes.Length}\r\n"));
+                        _ = client.Socket.Send(Encoding.UTF8.GetBytes("\r\n"));
+                        _ = client.Socket.Send(bodyBytes);
                     }
                     catch (Exception)
                     {
@@ -237,26 +242,37 @@ namespace client.service.serverPlugins.forward.tcp
                 {
                     Logger.Instance.Info(failModel.Buffer.Length.ToString());
                 }
-                socket.SafeClose();
-                _ = clients.TryRemove(failModel.RequestId, out _);
+                client.Socket.SafeClose();
             }
         }
 
         public void Stop(int sourcePort)
         {
-            _ = services.TryRemove(sourcePort, out Socket socket);
-            socket.SafeClose();
+            if (services.TryRemove(sourcePort, out ServerModel server) && server != null)
+            {
+                server.Socket.SafeClose();
+                server.CancelToken.Cancel();
+                server.AcceptDone.Dispose();
+            }
+
             OnListeningChange?.Invoke(this, new ListeningChangeModel
             {
                 SourcePort = sourcePort,
                 Listening = false
             });
 
-            IsStart = services.Count > 0;
+            IEnumerable<long> requestIds = clients.Where(c => c.Value.SourcePort == sourcePort).Select(c => c.Key);
+            foreach (var requestId in requestIds)
+            {
+                if (clients.TryRemove(requestId, out ClientCacheModel client) && client != null)
+                {
+                    client.Socket.SafeClose();
+                }
+            }
         }
         public void StopAll()
         {
-            foreach (KeyValuePair<int, Socket> item in services)
+            foreach (KeyValuePair<int, ServerModel> item in services)
             {
                 Stop(item.Key);
             }
@@ -279,5 +295,19 @@ namespace client.service.serverPlugins.forward.tcp
     {
         public ClientInfo TargetClient { get; set; }
         public ManualResetEvent AcceptDone { get; set; }
+    }
+
+
+    public class ClientCacheModel
+    {
+        public int SourcePort { get; set; } = 0;
+        public Socket Socket { get; set; }
+    }
+    public class ServerModel
+    {
+        public int SourcePort { get; set; } = 0;
+        public Socket Socket { get; set; }
+        public ManualResetEvent AcceptDone { get; set; }
+        public CancellationTokenSource CancelToken { get; set; }
     }
 }

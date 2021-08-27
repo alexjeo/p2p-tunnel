@@ -5,6 +5,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -19,7 +20,7 @@ namespace client.service.serverPlugins.forward.tcp
         public static TcpForwardHelper Instance => lazy.Value;
 
         public IPAddress IP { get; private set; }
-        private readonly string configFileName = "config_tcp_forward.bin";
+        private readonly string configFileName = "config_tcp_forward.json";
         public List<TcpForwardRecordBaseModel> Mappings { get; set; } = new List<TcpForwardRecordBaseModel>();
         private readonly ConcurrentDictionary<long, ClientModel> clients = new();
 
@@ -47,7 +48,6 @@ namespace client.service.serverPlugins.forward.tcp
         {
             StartAll();
         }
-
 
         private void OnRequest(object sender, TcpForwardRequestModel arg)
         {
@@ -290,7 +290,7 @@ namespace client.service.serverPlugins.forward.tcp
 
         private void ReadConfig()
         {
-            ConfigFileModel config = configFileName.ProtobufDeserializeFileRead<ConfigFileModel>();
+            ConfigFileModel config = Helper.DeJsonSerializer<ConfigFileModel>(File.ReadAllText(configFileName));
             if (config != null)
             {
                 Mappings = config.Mappings;
@@ -304,11 +304,11 @@ namespace client.service.serverPlugins.forward.tcp
         {
             try
             {
-                _ = new ConfigFileModel
+
+                File.WriteAllText(configFileName, Helper.JsonSerializer(new ConfigFileModel
                 {
                     Mappings = Mappings
-                }.ProtobufSerializeFileSave(configFileName);
-
+                }));
                 return string.Empty;
             }
             catch (Exception ex)
@@ -318,7 +318,7 @@ namespace client.service.serverPlugins.forward.tcp
         }
     }
 
-    public class ConfigFileModel : IFileConfig
+    public class ConfigFileModel
     {
         public ConfigFileModel() { }
 

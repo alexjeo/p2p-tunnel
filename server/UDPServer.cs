@@ -33,15 +33,23 @@ namespace server
 
         public UdpClient UdpcRecv { get; set; } = null;
         IPEndPoint IpepServer { get; set; } = null;
-        bool IsStart { get; set; } = false;
+        private CancellationTokenSource cancellationTokenSource;
+        private bool Running
+        {
+            get
+            {
+                return cancellationTokenSource != null && !cancellationTokenSource.IsCancellationRequested;
+            }
+        }
 
         public void Start(int port)
         {
-            if (IsStart)
+            if (Running)
             {
                 return;
             }
 
+            cancellationTokenSource = new CancellationTokenSource();
             IpepServer = new IPEndPoint(IPAddress.Any, port);
             UdpcRecv = new UdpClient(IpepServer);
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -52,20 +60,19 @@ namespace server
                 UdpcRecv.Client.IOControl(SIO_UDP_CONNRESET, new byte[] { Convert.ToByte(false) }, null);
             }
 
-            IsStart = true;
-            _ = Task.Factory.StartNew(() =>
+            _ = Task.Factory.StartNew((e) =>
               {
-                  while (IsStart)
+                  while (Running)
                   {
                       Receive();
                   }
-              }, TaskCreationOptions.LongRunning);
+              }, TaskCreationOptions.LongRunning, cancellationTokenSource.Token);
 
         }
 
         public void Stop()
         {
-            IsStart = false;
+            cancellationTokenSource.Cancel();
             if (UdpcRecv != null)
             {
                 UdpcRecv.Close();
