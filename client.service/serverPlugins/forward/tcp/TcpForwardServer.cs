@@ -62,7 +62,7 @@ namespace client.service.serverPlugins.forward.tcp
             ClientInfo targetClient = mapping.Client;
             TcpForwardAliveTypes aliveType = mapping.AliveType;
 
-            _ = Task.Factory.StartNew(() =>
+            _ = Task.Factory.StartNew((e) =>
             {
                 while (!server.CancelToken.IsCancellationRequested)
                 {
@@ -90,7 +90,7 @@ namespace client.service.serverPlugins.forward.tcp
                     _ = server.AcceptDone.WaitOne();
                 }
 
-            }, TaskCreationOptions.LongRunning);
+            }, TaskCreationOptions.LongRunning, server.CancelToken.Token);
 
         }
 
