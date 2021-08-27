@@ -57,6 +57,7 @@ namespace server.model
         /// 5,A收到 step_3 给B发个 step_4
         /// </summary>
         SERVER_P2P,
+        SERVER_P2P_REVERSE,
         P2P_STEP_1,
         P2P_STEP_1_ACK, //随便回应个消息
         SERVER_P2P_STEP_1_RESULT,

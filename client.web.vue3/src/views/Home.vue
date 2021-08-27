@@ -2,7 +2,7 @@
  * @Author: snltty
  * @Date: 2021-08-19 21:50:16
  * @LastEditors: snltty
- * @LastEditTime: 2021-08-26 10:31:18
+ * @LastEditTime: 2021-08-27 16:20:20
  * @version: v1.0.0
  * @Descripttion: 功能说明
  * @FilePath: \client.web.vue3\src\views\Home.vue
@@ -22,22 +22,29 @@
                     <el-switch disabled @click.stop v-model="scope.row.TcpConnected"></el-switch>
                 </template>
             </el-table-column>
-            <el-table-column prop="todo" label="操作" width="200" fixed="right" class="t-c">
+            <el-table-column prop="todo" label="操作" width="280" fixed="right" class="t-c">
                 <template #default="scope">
                     <div class="t-c">
-                        <el-button :disabled="scope.row.Connected && scope.row.TcpConnected" :loading="scope.row.Connecting || scope.row.TcpConnecting" size="mini" @click="handleConnect(scope.row)">连接</el-button>
+                        <el-button :disabled="scope.row.Connected && scope.row.TcpConnected" :loading="scope.row.Connecting || scope.row.TcpConnecting" size="mini" @click="handleConnect(scope.row)">连它</el-button>
+                        <el-button :disabled="scope.row.Connected && scope.row.TcpConnected" :loading="scope.row.Connecting || scope.row.TcpConnecting" size="mini" @click="handleConnectReverse(scope.row)">连我</el-button>
                         <el-button :loading="scope.row.Connecting || scope.row.TcpConnecting" size="mini" @click="handleReset(scope.row)">重启它</el-button>
                     </div>
                 </template>
             </el-table-column>
         </el-table>
+        <div class="remark">
+            <el-alert title="说明" type="info" show-icon :closable="false">
+                <p style="line-height:2rem">1、注册信息里 [<strong>客户信息</strong>]的<strong>【TCP端口】</strong>与 [<strong>注册信息</strong>]的<strong>【TCP端口】</strong>一致时，连接别人的成功概率高</p>
+                <p style="line-height:2rem">2、所以会有 【连它】和 【连我】 之分，尽量让两个TCP端口一致的一方连接另一方</p>
+            </el-alert>
+        </div>
     </div>
 </template>
 
 <script>
-import { toRefs } from '@vue/reactivity';
+import { computed, toRefs } from '@vue/reactivity';
 import { injectClients } from '../states/clients'
-import { sendClientConnect } from '../apis/clients'
+import { sendClientConnect, sendClientConnectReverse } from '../apis/clients'
 import { sendReset } from '../apis/reset'
 export default {
     name: 'Home',
@@ -48,12 +55,15 @@ export default {
         const handleConnect = (row) => {
             sendClientConnect(row.Id);
         }
+        const handleConnectReverse = (row) => {
+            sendClientConnectReverse(row.Id);
+        }
         const handleReset = (row) => {
             sendReset(row.Id);
         }
 
         return {
-            ...toRefs(clientsState), handleConnect, handleReset
+            ...toRefs(clientsState), handleConnect, handleReset, handleConnectReverse
         }
 
     }
@@ -62,4 +72,7 @@ export default {
 <style lang="stylus" scoped>
 .home
     padding: 2rem;
+
+.remark
+    margin-top: 1rem;
 </style>

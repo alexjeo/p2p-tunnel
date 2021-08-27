@@ -7,7 +7,7 @@ using server.service.model;
 namespace server.service.plugins
 {
     /// <summary>
-    /// 客户端链接插件
+    /// 正向链接
     /// </summary>
     public class ConnectClientPlugin : IPlugin
     {
@@ -67,6 +67,55 @@ namespace server.service.plugins
                                 LocalIps = target.LocalIps,
                                 LocalTcpPort = target.LocalPort == 0 ? target.TcpPort : target.LocalPort
                             }
+                        });
+                    }
+
+                }
+            }
+
+        }
+    }
+    /// <summary>
+    /// 反向链接
+    /// </summary>
+    public class ConnectClientReversePlugin : IPlugin
+    {
+        public MessageTypes MsgType => MessageTypes.SERVER_P2P_REVERSE;
+
+        public void Excute(PluginExcuteModel data, ServerType serverType)
+        {
+            MessageConnectClientReverseModel model = data.Packet.Chunk.ProtobufDeserialize<MessageConnectClientReverseModel>();
+
+            //A已注册
+            RegisterCacheModel source = ClientRegisterCache.Instance.Get(model.Id);
+            if (source != null)
+            {
+                //B已注册
+                RegisterCacheModel target = ClientRegisterCache.Instance.Get(model.ToId);
+                if (target != null)
+                {
+                    //是否在同一个组
+                    if (source.GroupId != target.GroupId)
+                    {
+                        return;
+                    }
+
+                    if (serverType == ServerType.UDP)
+                    {
+                        UDPServer.Instance.Send(new MessageRecvQueueModel<IMessageModelBase>
+                        {
+                            Address = target.Address,
+                            TcpCoket = target.TcpSocket,
+                            Data = model
+                        });
+                    }
+                    else if (serverType == ServerType.TCP)
+                    {
+                        TCPServer.Instance.Send(new MessageRecvQueueModel<IMessageModelBase>
+                        {
+                            Address = target.Address,
+                            TcpCoket = target.TcpSocket,
+                            Data = model
                         });
                     }
 

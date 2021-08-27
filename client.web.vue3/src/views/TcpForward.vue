@@ -2,13 +2,13 @@
  * @Author: snltty
  * @Date: 2021-08-20 00:47:21
  * @LastEditors: snltty
- * @LastEditTime: 2021-08-23 16:58:29
+ * @LastEditTime: 2021-08-27 15:59:54
  * @version: v1.0.0
  * @Descripttion: 功能说明
  * @FilePath: \client.web.vue3\src\views\TcpForward.vue
 -->
 <template>
-    <div class="upnp-wrap">
+    <div class="forward-wrap">
         <div class="head">
             <el-button type="primary" size="mini" style="margin-right:.6rem" @click="handleAdd">增加转发</el-button>
             <el-button size="mini" @click="getData">刷新列表</el-button>
@@ -40,6 +40,13 @@
                 </template>
             </el-table-column>
         </el-table>
+        <div class="remark">
+            <el-alert title="说明" type="info" show-icon :closable="false">
+                <p style="line-height:2rem">1、源端是你的，目标是对方的</p>
+                <p style="line-height:2rem">2、例如 源是<strong>127.0.0.1:8080</strong>，目标是<strong>【B客户端】</strong>的<strong>127.0.0.1:12138</strong> ，则在你电脑访问 127.0.0.1:8080则会访问到 B客户端的127.0.0.1:12138服务</p>
+                <p style="line-height:2rem">3、web是短连接，其它服务长链接</p>
+            </el-alert>
+        </div>
         <el-dialog title="转发" destroy-on-close v-model="showAdd" center :close-on-click-modal="false" width="600px">
             <el-form ref="formDom" :model="form" :rules="rules" label-width="80px">
                 <el-form-item label="" label-width="0">
@@ -120,9 +127,23 @@ export default {
             },
             rules: {
                 SourceIp: [{ required: true, message: '必填', trigger: 'blur' }],
-                SourcePort: [{ required: true, message: '必填', trigger: 'blur' }],
+                SourcePort: [
+                    { required: true, message: '必填', trigger: 'blur' },
+                    {
+                        type: 'number', min: 1, max: 65535, message: '数字 1-65535', trigger: 'blur', transform (value) {
+                            return Number(value)
+                        }
+                    }
+                ],
                 TargetIp: [{ required: true, message: '必填', trigger: 'blur' }],
-                TargetPort: [{ required: true, message: '必填', trigger: 'blur' }],
+                TargetPort: [
+                    { required: true, message: '必填', trigger: 'blur' },
+                    {
+                        type: 'number', min: 1, max: 65535, message: '数字 1-65535', trigger: 'blur', transform (value) {
+                            return Number(value)
+                        }
+                    }
+                ],
             }
         });
 
@@ -187,9 +208,12 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
-.upnp-wrap
+.forward-wrap
     padding: 2rem;
 
     .head
         margin-bottom: 1rem;
+
+.remark
+    margin-top: 1rem;
 </style>

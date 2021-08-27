@@ -2,7 +2,7 @@
  * @Author: snltty
  * @Date: 2021-08-20 00:47:21
  * @LastEditors: snltty
- * @LastEditTime: 2021-08-20 17:57:15
+ * @LastEditTime: 2021-08-27 16:02:25
  * @version: v1.0.0
  * @Descripttion: 功能说明
  * @FilePath: \client.web.vue3\src\views\UPNP.vue
@@ -77,6 +77,11 @@
                 </template>
             </el-table-column>
         </el-table>
+        <div class="remark">
+            <el-alert title="说明" type="info" show-icon :closable="false">
+                <p style="line-height:2rem">1、当你拥有公网IP时可用</p>
+            </el-alert>
+        </div>
     </div>
 </template>
 <script>
@@ -127,6 +132,15 @@ export default {
             state.list.splice(scope.$index, 1);
         }
         const handleSave = (scope) => {
+            scope.row.PrivatePort = + scope.row.PrivatePort;
+            scope.row.PublicPort = + scope.row.PublicPort;
+            scope.row.Lifetime = + scope.row.Lifetime;
+            if (!scope.row.PrivatePort || isNaN(scope.row.PrivatePort) || !scope.row.PublicPort || isNaN(scope.row.PublicPort)) {
+                return ElMessage.error('请正确填写端口号');
+            }
+            if (!scope.row.Lifetime || isNaN(scope.row.Lifetime)) {
+                return ElMessage.error('请正确填写有效期');
+            }
             scope.row.loading = true;
             sendUpnpAddMapping(scope.row).then(() => {
                 deviceChange();
@@ -148,4 +162,7 @@ export default {
 
     .head
         margin-bottom: 1rem;
+
+.remark
+    margin-top: 1rem;
 </style>

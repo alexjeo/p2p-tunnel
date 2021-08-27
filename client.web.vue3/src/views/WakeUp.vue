@@ -2,7 +2,7 @@
  * @Author: snltty
  * @Date: 2021-08-19 22:30:19
  * @LastEditors: snltty
- * @LastEditTime: 2021-08-25 09:33:57
+ * @LastEditTime: 2021-08-27 16:00:10
  * @version: v1.0.0
  * @Descripttion: 功能说明
  * @FilePath: \client.web.vue3\src\views\WakeUp.vue
@@ -49,7 +49,14 @@ export default {
             rules: {
                 Ip: [{ required: true, message: '必填', trigger: 'blur' }],
                 Mac: [{ required: true, message: '必填', trigger: 'blur' }],
-                Port: [{ required: true, message: '必填', trigger: 'blur' }]
+                Port: [
+                    { required: true, message: '必填', trigger: 'blur' },
+                    {
+                        type: 'number', min: 1, max: 65535, message: '数字 1-65535', trigger: 'blur', transform (value) {
+                            return Number(value)
+                        }
+                    }
+                ]
             }
         });
         const handleSubmit = () => {
