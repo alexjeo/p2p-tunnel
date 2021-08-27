@@ -38,6 +38,16 @@ namespace client.service.serverPlugins.clients
             //连接别人失败
             ConnectClientEventHandles.Instance.OnSendTcpConnectClientStep2FailHandler += OnSendTcpConnectClientStep2FailHandler;
 
+            //有人要求反向链接
+            ConnectClientEventHandles.Instance.OnConnectClientReverseHandler += (s, arg) =>
+            {
+                if (clients.TryGetValue(arg.Data.Id, out ClientInfo client) && client != null)
+                {
+                    ConnectClient(client);
+                }
+            };
+
+
             //退出消息
             RegisterEventHandles.Instance.OnSendExitMessageHandler += (sender, e) =>
             {
@@ -298,7 +308,7 @@ namespace client.service.serverPlugins.clients
                     },
                     FailCallback = (e) =>
                     {
-                        Console.WriteLine(e.Msg);
+                        Logger.Instance.Error(e.Msg);
                         SetClientTcpOffline(info.Id);
                         info.TcpConnecting = false;
                     },

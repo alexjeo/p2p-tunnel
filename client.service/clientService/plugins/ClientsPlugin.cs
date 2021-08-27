@@ -1,4 +1,5 @@
 ﻿using client.service.serverPlugins.clients;
+using client.service.serverPlugins.connectClient;
 using common;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,12 @@ namespace client.service.clientService.plugins
         {
             ConnectModel model = Helper.DeJsonSerializer<ConnectModel>(arg.Content);
             ClientsHelper.Instance.ConnectClient(model.ID);
+        }
+
+        public void ConnectReverse(ClientServicePluginExcuteWrap arg)
+        {
+            ConnectModel model = Helper.DeJsonSerializer<ConnectModel>(arg.Content);
+            ConnectClientEventHandles.Instance.SendConnectClientReverseMessage(model.ID);
         }
     }
 

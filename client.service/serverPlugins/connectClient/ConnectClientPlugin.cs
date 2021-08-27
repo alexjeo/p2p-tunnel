@@ -4,9 +4,22 @@ using server.plugin;
 
 namespace client.service.serverPlugins.connectClient
 {
-    /// <summary>
-    /// 具体流程 看MessageTypes里的描述
-    /// </summary>
+
+    public class ConnectClientReversePlugin : IPlugin
+    {
+        public MessageTypes MsgType => MessageTypes.SERVER_P2P_REVERSE;
+
+        public void Excute(PluginExcuteModel model, ServerType serverType)
+        {
+            MessageConnectClientReverseModel data = model.Packet.Chunk.ProtobufDeserialize<MessageConnectClientReverseModel>();
+            ConnectClientEventHandles.Instance.OnConnectClientReverseMessage(new OnConnectClientReverseEventArg
+            {
+                Data = data,
+                Packet = model,
+            });
+        }
+    }
+
     public class ConnectClientStep1Plugin : IPlugin
     {
         public MessageTypes MsgType => MessageTypes.P2P_STEP_1;
@@ -36,7 +49,7 @@ namespace client.service.serverPlugins.connectClient
 
     public class ConnectClientStep2Plugin : IPlugin
     {
-        public  MessageTypes MsgType => MessageTypes.P2P_STEP_2;
+        public MessageTypes MsgType => MessageTypes.P2P_STEP_2;
 
         public void Excute(PluginExcuteModel model, ServerType serverType)
         {

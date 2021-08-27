@@ -153,6 +153,41 @@ namespace client.service.serverPlugins.connectClient
             }, param.Timeout);
         }
 
+
+
+        /// <summary>
+        /// 服务器消息，让某个客户端反向链接我
+        /// </summary>
+        public event EventHandler<long> OnSendConnectClientReverseHandler;
+        /// <summary>
+        /// 服务器消息，让某个客户端反向链接我
+        /// </summary>
+        /// <param name="toid"></param>
+        public void SendConnectClientReverseMessage(long id)
+        {
+            EventHandlers.Instance.SendTcpMessage(new SendTcpMessageEventArg
+            {
+                Data = new MessageConnectClientReverseModel { Id = ConnectId, ToId = id },
+                Socket = TcpServer
+            });
+
+            OnSendConnectClientReverseHandler?.Invoke(this, id);
+        }
+        /// <summary>
+        /// 服务器消息，某个客户端要我反向链接他
+        /// </summary>
+        public event EventHandler<OnConnectClientReverseEventArg> OnConnectClientReverseHandler;
+        /// <summary>
+        /// 服务器消息，某个客户端要我反向链接他
+        /// </summary>
+        /// <param name="toid"></param>
+        public void OnConnectClientReverseMessage(OnConnectClientReverseEventArg arg)
+        {
+            OnConnectClientReverseHandler?.Invoke(this, arg);
+        }
+
+
+
         /// <summary>
         /// 服务器消息，某个客户端要跟我连接
         /// </summary>
@@ -658,6 +693,13 @@ namespace client.service.serverPlugins.connectClient
         public string Name { get; set; }
         public long Id { get; set; }
     }
+
+    public class OnConnectClientReverseEventArg : EventArgs
+    {
+        public PluginExcuteModel Packet { get; set; }
+        public MessageConnectClientReverseModel Data { get; set; }
+    }
+
 
     public class OnConnectClientStep1EventArg : EventArgs
     {
