@@ -302,4 +302,56 @@ namespace server.service.plugins
             }
         }
     }
+
+    public class ConnectClientStep2StopPlugin : IPlugin
+    {
+        public MessageTypes MsgType =>  MessageTypes.SERVER_P2P_STEP_2_STOP;
+
+        public void Excute(PluginExcuteModel data, ServerType serverType)
+        {
+            MessageConnectClientStep2StopModel model = data.Packet.Chunk.ProtobufDeserialize<MessageConnectClientStep2StopModel>();
+
+            //已注册
+            RegisterCacheModel source = ClientRegisterCache.Instance.Get(model.Id);
+            if (source != null)
+            {
+                //已注册
+                RegisterCacheModel target = ClientRegisterCache.Instance.Get(model.ToId);
+                if (target != null)
+                {
+                    if (source.GroupId != target.GroupId)
+                    {
+                        return;
+                    }
+                    if (serverType == ServerType.UDP)
+                    {
+                        UDPServer.Instance.Send(new MessageRecvQueueModel<IMessageModelBase>
+                        {
+                            Address = target.Address,
+                            TcpCoket = target.TcpSocket,
+                            Data = new MessageConnectClientStep2StopModel
+                            {
+                                Id = model.Id,
+                                ToId = model.ToId
+                            }
+                        });
+                    }
+                    else if (serverType == ServerType.TCP)
+                    {
+                        TCPServer.Instance.Send(new MessageRecvQueueModel<IMessageModelBase>
+                        {
+                            Address = target.Address,
+                            TcpCoket = target.TcpSocket,
+                            Data = new MessageConnectClientStep2StopModel
+                            {
+                                Id = model.Id,
+                                ToId = model.ToId
+                            }
+                        });
+                    }
+                }
+            }
+        }
+    }
+    
 }

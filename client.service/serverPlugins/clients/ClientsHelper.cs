@@ -350,5 +350,11 @@ namespace client.service.serverPlugins.clients
             return client;
         }
 
+
+        public void OfflineClient(long id)
+        {
+            SetClientOffline(id);
+            SetClientTcpOffline(id);
+        }
     }
 }

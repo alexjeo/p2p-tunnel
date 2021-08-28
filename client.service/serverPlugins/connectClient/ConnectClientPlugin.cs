@@ -172,4 +172,17 @@ namespace client.service.serverPlugins.connectClient
             }
         }
     }
+
+
+    public class ConnectClientStep2StopPlugin : IPlugin
+    {
+        public MessageTypes MsgType => MessageTypes.SERVER_P2P_STEP_2_STOP;
+
+        public void Excute(PluginExcuteModel data, ServerType serverType)
+        {
+            MessageConnectClientStep2StopModel model = data.Packet.Chunk.ProtobufDeserialize<MessageConnectClientStep2StopModel>();
+
+            ConnectClientEventHandles.Instance.OnTcpConnectClientStep2StopMessage(model);
+        }
+    }
 }

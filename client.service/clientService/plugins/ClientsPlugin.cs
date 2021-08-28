@@ -19,6 +19,18 @@ namespace client.service.clientService.plugins
             ClientsHelper.Instance.ConnectClient(model.ID);
         }
 
+        public void Stop(ClientServicePluginExcuteWrap arg)
+        {
+            ConnectModel model = Helper.DeJsonSerializer<ConnectModel>(arg.Content);
+            ConnectClientEventHandles.Instance.SendTcpConnectClientStep2StopMessage(model.ID);
+        }
+
+        public void Offline(ClientServicePluginExcuteWrap arg)
+        {
+            ConnectModel model = Helper.DeJsonSerializer<ConnectModel>(arg.Content);
+            ClientsHelper.Instance.OfflineClient(model.ID);
+        }
+
         public void ConnectReverse(ClientServicePluginExcuteWrap arg)
         {
             ConnectModel model = Helper.DeJsonSerializer<ConnectModel>(arg.Content);
